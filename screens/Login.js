@@ -1,4 +1,4 @@
-import { View, Text,SafeAreaView,TextInput,TouchableOpacity } from 'react-native'
+import { View, Text,SafeAreaView,TextInput,TouchableOpacity,Keyboard} from 'react-native'
 import React from 'react'
 import { useState } from 'react';
 import {
@@ -24,7 +24,7 @@ import {
 } from '@expo-google-fonts/poppins';
 import Colors from '../constans/Colors';
 import { Ionicons } from "@expo/vector-icons";
-import {createUserWithEmailAndPassword,signInWithEmailAndPassword } from "firebase/auth";
+import {signInWithEmailAndPassword } from "firebase/auth";
 import {auth,db} from "../firebase"
 const Login = ({navigation}) => {
   let [fontsLoaded] = useFonts({
@@ -57,6 +57,7 @@ const Login = ({navigation}) => {
       .then(userCredentials => {
         const user = userCredentials.user;
         console.log('Logged in with:', user.email);
+        Keyboard.dismiss()
         navigation.navigate("home")
       })
       .catch(error => alert(error.message))

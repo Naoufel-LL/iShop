@@ -8,6 +8,7 @@ const Start = ({navigation}) => {
   return (
     <Onboarding
     onDone={()=>navigation.replace("login")}
+    onSkip={()=>navigation.replace("login")}
     pages={[
       {
         backgroundColor: Colors.back,
