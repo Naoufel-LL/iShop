@@ -1,7 +1,9 @@
-import { View,Text,SafeAreaView,TextInput,TouchableOpacity, ScrollView} from 'react-native'
+import { View,Text,SafeAreaView,TextInput,TouchableOpacity, ScrollView,Image} from 'react-native'
 import {Picker} from '@react-native-picker/picker'
 import DateTimePicker from '@react-native-community/datetimepicker';
 import React from 'react'
+import {updateProfile,sendEmailVerification} from "firebase/auth";
+import {ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import {
   useFonts,
   Poppins_100Thin,
@@ -23,14 +25,16 @@ import {
   Poppins_900Black,
   Poppins_900Black_Italic,
 } from '@expo-google-fonts/poppins';
+
 import { useState } from 'react';
 import Colors from '../constans/Colors';
 import { Ionicons } from "@expo/vector-icons";
-import {signInWithEmailAndPassword} from "firebase/auth";
-import {auth,db} from "../firebase"
+import {signInWithEmailAndPassword} from "firebase/auth"
+import * as ImagePicker from 'expo-image-picker';
+
+import {auth,db,storage} from "../firebase"
 import { collection, addDoc } from "firebase/firestore"; 
 import { Alert } from 'react-native';
-
 const Register2 = ({navigation,route}) =>{
     let [fontsLoaded] = useFonts({
         Poppins_100Thin,
@@ -63,7 +67,10 @@ const Register2 = ({navigation,route}) =>{
       const [selectedCity, setSelectedCity] = useState('');
       const [date, setDate] = useState(new Date());
       const [showPicker, setShowPicker] = useState(false);
+      const [image, setImage] = useState("https://mui.com/static/images/avatar/1.jpg");
+      const [imageUrl, setImageUrl] = useState("https://mui.com/static/images/avatar/1.jpg");
       const [dateText,setDateText] = useState("Select Your Birthday")
+      const [uploading, setUploading] = useState(false)
       const onChangeDate = (event, selectedDate) => {
         setShowPicker(false);
         if (selectedDate) {
@@ -81,6 +88,70 @@ const Register2 = ({navigation,route}) =>{
         }
       
         return true;
+      }
+      const uploadImage = async (imagepic) => {
+        const Imageblob = await new Promise((resolve, reject) => {
+          const xhr = new XMLHttpRequest();
+          xhr.onload = function() {
+            resolve(xhr.response);
+          };
+          xhr.onerror = function() {
+            reject(new TypeError('Network request failed'));
+          };
+          xhr.responseType = 'blob';
+          xhr.open('GET', imagepic, true);
+          xhr.send(null);
+        });
+        // Create the file metadata
+         /** @type {any} */
+const metadata = {
+  contentType: 'image/jpeg'
+};
+// Upload file and metadata to the object 'images/mountains.jpg'
+const storageRef = ref(storage, 'profiles/' + Date.now());
+const uploadTask = uploadBytesResumable(storageRef, Imageblob, metadata);
+
+// Listen for state changes, errors, and completion of the upload.
+uploadTask.on('state_changed',
+  (snapshot) => {
+    // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+    console.log('Upload is ' + progress + '% done');
+    switch (snapshot.state) {
+      case 'paused':
+        console.log('Upload is paused');
+        break;
+      case 'running':
+        console.log('Upload is running');
+        break;
+    }
+  }, 
+  (error) => {
+    // A full list of error codes is available at
+    // https://firebase.google.com/docs/storage/web/handle-errors
+    switch (error.code) {
+      case 'storage/unauthorized':
+        // User doesn't have permission to access the object
+        break;
+      case 'storage/canceled':
+        // User canceled the upload
+        break;
+
+      // ...
+
+      case 'storage/unknown':
+        // Unknown error occurred, inspect error.serverResponse
+        break;
+    }
+  }, 
+  () => {
+    // Upload completed successfully, now we can get the download URL
+    getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+      console.log('File available at', downloadURL);
+      setImageUrl(downloadURL)
+    });
+  }
+);
       }
 const cities = [
   'Select City',
@@ -145,9 +216,8 @@ const cities = [
 const email = route.params.email
 const password = route.params.password
 const handleSignUp =  () =>{
-     if(firstName != '' && lastName != '' && adress != '' && selectedCity != 'Select City' && validerTel(phone)){
-        
-        signInWithEmailAndPassword(auth,email, password)
+     if(firstName != '' && lastName != '' && adress != '' && selectedCity != 'Select City' && validerTel(phone)){       
+      signInWithEmailAndPassword(auth,email, password)
         .then(userCredentials => {
           const user = userCredentials.user;
           console.log('Logged in with:', user.email);
@@ -158,18 +228,51 @@ const handleSignUp =  () =>{
             adress:adress,
             city:selectedCity,
             birth:date,
+            profilPic:imageUrl,
             verified: false,
           });
           console.log("Document written with ID: ", docRef.id);
-          navigation.navigate("home")
+          updateProfile(auth.currentUser, {
+            displayName: firstName + ' ' + lastName, photoURL: imageUrl
+          }).then(() => {
+            console.log("updated")
+              // ...
+          }).catch((error) => {
+            // An error occurred
+            // ...
+          });
+          sendEmailVerification(auth.currentUser)
+  .then(() => {
+      console.log("Email Sent !!")
+  });
+          setTimeout(function () {
+            
+            navigation.navigate("home")
+            }, 5000);         
         })
         .catch(error => alert(error.message))    
      }else{
-         Alert.alert("")
+         Alert.alert("Error")
      }
      
 }
- 
+const pickImage = async () => {
+  // No permissions request is necessary for launching the image library
+  let result = await ImagePicker.launchImageLibraryAsync({
+    mediaTypes: ImagePicker.MediaTypeOptions.All,
+    allowsEditing: true,
+    aspect: [4, 3],
+    quality: 1,
+  });
+
+  console.log(result);
+
+  if (!result.canceled) {
+    setImage(result.assets[0].uri);
+    console.log(image)
+    uploadImage(result.assets[0].uri)
+  }
+};
 if(fontsLoaded){
  return(
     <SafeAreaView style={{paddingTop:'10%',justifyContent:'center',alignContent:'center',width:"100%",alignItems:"center"}}>
@@ -180,9 +283,14 @@ if(fontsLoaded){
        <Text style={{fontFamily:"Poppins_600SemiBold",fontSize:15,paddingVertical:10,textAlign:'center',width:'100%'}}>
          Fill the form to register
        </Text>
-
        <View style={{width:'100%',justifyContent:"center",alignItems:'center',paddingVertical:20}}>
-        <TextInput
+       {image && <Image source={{ uri: image }} style={{ width: 100, height: 100 }}></Image>}
+         <TouchableOpacity onPress={()=>{pickImage()}}>
+          <View style={{padding:10,backgroundColor:Colors.main,marginVertical:10,borderRadius:5}}>
+          <Text style={{fontFamily:"Poppins_400Regular",color:'#fff'}}>Upload Your Image</Text>
+          </View>
+         </TouchableOpacity>
+         <TextInput
         required
         value={firstName}
         onChangeText={(text)=>setFirstName(text)}
@@ -331,7 +439,7 @@ if(fontsLoaded){
               fontSize: 19,
             }}
           >
-            Sign up
+             Continue
           </Text>
         </TouchableOpacity>
       

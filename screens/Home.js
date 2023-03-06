@@ -26,7 +26,7 @@ import {
   Poppins_900Black,
   Poppins_900Black_Italic,
 } from '@expo-google-fonts/poppins';
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs,where} from "firebase/firestore";
 import { getFirestore } from 'firebase/firestore';
 const Home = ({navigation}) => {
   let [fontsLoaded] = useFonts({
@@ -49,6 +49,7 @@ const Home = ({navigation}) => {
     Poppins_900Black,
     Poppins_900Black_Italic,
   });
+  console.log(auth.currentUser)
   useLayoutEffect(()=>{
     console.log("yes");
     try {
@@ -58,7 +59,8 @@ const Home = ({navigation}) => {
     .then((snapshot) => {
       let collection = []
       snapshot.docs.forEach((doc) => {
-          console.log(doc.data().title)
+          collection.push(doc.data())
+          console.log(collection)
        })
     })
      } catch (error) {
@@ -68,16 +70,15 @@ const Home = ({navigation}) => {
   
  if(fontsLoaded){
   return (
-    <ScrollView>
+    <ScrollView style={{backgroundColor:'#fff'}}>
       <View>
       <Header />
       </View>
       <View style={{justifyContent:"center",alignItems:"center",paddingVertical:20}}> 
       <Image style={{width:'90%',height:200,borderRadius:20}} source={require("../assets/board3.png")}></Image>
        </View>
-       <Text>f</Text>
        <View style={{justifyContent:"center",alignItems:"center",width:"100%",flexDirection:"row",flexWrap:"wrap",}}>
-        <ItemCard />
+        <ItemCard /> 
         <ItemCard />
         <ItemCard />
         <ItemCard />

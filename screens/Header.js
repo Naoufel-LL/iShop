@@ -48,6 +48,7 @@ const Header = () => {
         Poppins_900Black,
         Poppins_900Black_Italic,
       });
+      console.log(auth.currentUser.photoURL)
       const navigation = useNavigation();
       const SignOutProfile = () =>{
         console.log("out")
@@ -61,9 +62,9 @@ const Header = () => {
         return (
             <View style={{width:'100%',height:80,backgroundColor:Colors.main,justifyContent:'space-between',flexDirection:'row',alignItems:'center',padding:20}}>
                 <TouchableOpacity>
-                <Avatar image={{ uri: "https://mui.com/static/images/avatar/1.jpg" }} />
+                <Avatar image={{ uri: auth.currentUser.photoURL }} />
                 </TouchableOpacity>
-                <Text style={{fontFamily:"Poppins_700Bold",fontSize:22,color:"#fff"}}>iShop</Text>
+                <Text style={{fontFamily:"Poppins_400Regular",fontSize:22,color:"#fff"}}>iShop</Text>
                 <TouchableOpacity onPress={()=>SignOutProfile()}>
                 <Ionicons name="log-out-outline" size={36} color="#fff"></Ionicons>
                 </TouchableOpacity>
