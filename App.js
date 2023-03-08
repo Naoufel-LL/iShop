@@ -9,6 +9,7 @@ import Home from './screens/Home';
 import Tabs from './Tabs';
 import { auth } from "./firebase";
 import Register2 from './screens/Register2';
+import AddProduit from './screens/AddProduit';
 
 const Stack = createNativeStackNavigator();
 
@@ -21,6 +22,7 @@ function App() {
       <Stack.Screen name="register" component={Register} options={{headerShown:false}}  />
       <Stack.Screen name="register2" component={Register2} options={{headerShown:false}}  />
       <Stack.Screen name="home" component={Tabs}  options={{headerShown:false}} />
+      <Stack.Screen name="addProduit" component={AddProduit}  options={{headerShown:false}} />
       </Stack.Navigator>
     </NavigationContainer>
 

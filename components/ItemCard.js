@@ -23,7 +23,7 @@ import {
   } from '@expo-google-fonts/poppins';
 import Colors from '../constans/Colors';
 import { Ionicons } from "@expo/vector-icons";
-export default function ItemCard() {
+export default function ItemCard({data}) {
     let [fontsLoaded] = useFonts({
         Poppins_100Thin,
         Poppins_100Thin_Italic,
@@ -46,13 +46,13 @@ export default function ItemCard() {
       });
    if(fontsLoaded){
     return (
-            <View style={{margin:10,width:180,backgroundColor:'#fff',borderRadius:10,shadowColor: "#000",shadowOffset: {width: 0,height: 2,},shadowOpacity: 0.25,shadowRadius: 3.84,elevation: 3,}}>
-                 <Image resizeMode='cover' style={{width:180,height:180}} source={require("../assets/pic.png")}></Image>
+            <View style={{padding:5,margin:10,width:180,backgroundColor:'#fff',borderRadius:10,shadowColor: "#000",shadowOffset: {width: 0,height: 2,},shadowOpacity: 0.25,shadowRadius: 3.84,elevation: 3,}}>
+                 <Image resizeMode='cover' style={{width:'100%',height:200}} source={{uri : data.product_img}}></Image>
                  <View style={{padding:10}}>
-                 <Text style={{fontFamily:"Poppins_600SemiBold",fontSize:18}}>350 DH</Text>
-                    <Text style={{fontFamily:"Poppins_400Regular",fontSize:15}}>Jean Gris</Text>
-                    <Text style={{fontFamily:"Poppins_400Regular",fontSize:15,color:"grey"}}><Ionicons name="list"></Ionicons> Pantalons</Text>
-                    <Text style={{fontFamily:"Poppins_400Regular",fontSize:15,color:Colors.main}}><Ionicons name="pin"></Ionicons>  Berrechid</Text>
+                 <Text style={{fontFamily:"Poppins_600SemiBold",fontSize:18}}>{data.product_price} DH</Text>
+                    <Text style={{fontFamily:"Poppins_400Regular",fontSize:15}}>{data.product_title}</Text>
+                    <Text style={{fontFamily:"Poppins_400Regular",fontSize:15,color:"grey"}}><Ionicons name="list"></Ionicons> {data.product_categorie}</Text>
+                    <Text style={{fontFamily:"Poppins_400Regular",fontSize:15,color:Colors.main}}><Ionicons name="pin"></Ionicons>{data.product_city}</Text>
                     
                  </View>
              </View>

@@ -1,6 +1,6 @@
 import { View, Text,ScrollView,TouchableOpacity,Image} from 'react-native'
 import React from 'react'
-import {auth} from '../firebase'
+import {auth,db} from '../firebase'
 import { Ionicons } from "@expo/vector-icons";
 import Colors from '../constans/Colors';
 import { getAuth, signOut } from "firebase/auth";
@@ -26,9 +26,10 @@ import {
   Poppins_900Black,
   Poppins_900Black_Italic,
 } from '@expo-google-fonts/poppins';
-import { collection, getDocs,where} from "firebase/firestore";
+import { collection, query, where, onSnapshot } from "firebase/firestore";
 import { getFirestore } from 'firebase/firestore';
 const Home = ({navigation}) => {
+  const [products,setProducts]=useState([])
   let [fontsLoaded] = useFonts({
     Poppins_100Thin,
     Poppins_100Thin_Italic,
@@ -49,25 +50,51 @@ const Home = ({navigation}) => {
     Poppins_900Black,
     Poppins_900Black_Italic,
   });
-  console.log(auth.currentUser)
   useLayoutEffect(()=>{
-    console.log("yes");
     try {
-      const db = getFirestore()
-      const colRef = collection(db, "produits")
-      getDocs(colRef)
-    .then((snapshot) => {
-      let collection = []
-      snapshot.docs.forEach((doc) => {
-          collection.push(doc.data())
-          console.log(collection)
-       })
-    })
+        const list = []
+        console.log("clear")
+        const q = query(collection(db, "produits"))
+       const unsubscribe = onSnapshot(q, (querySnapshot) => {
+     querySnapshot.forEach((doc) => {
+      const {
+        owner_id,
+        owner_name,
+        owner_pic,
+        owner_tel,
+        product_title,
+        product_price,
+        product_img,
+        product_desc,
+        product_categorie,
+        product_city,
+        product_stock,
+        product_condition,
+      } = doc.data();
+      list.push({
+        owner_id:owner_id,
+        owner_name:owner_name,
+        owner_pic:owner_pic,
+        owner_tel:owner_tel,
+        product_title:product_title,
+        product_price:product_price,
+        product_img:product_img,
+        product_desc:product_desc,
+        product_categorie:product_categorie,
+        product_city:product_city,
+        product_stock:product_stock,
+        product_condition:product_condition,
+      });
+       console.log(products)
+     });
+setProducts(list)
+
+});
      } catch (error) {
        alert(error)
      }
-  })
-  
+  },[])
+  /*console.log(new Date((1578316263249)))*/
  if(fontsLoaded){
   return (
     <ScrollView style={{backgroundColor:'#fff'}}>
@@ -78,12 +105,12 @@ const Home = ({navigation}) => {
       <Image style={{width:'90%',height:200,borderRadius:20}} source={require("../assets/board3.png")}></Image>
        </View>
        <View style={{justifyContent:"center",alignItems:"center",width:"100%",flexDirection:"row",flexWrap:"wrap",}}>
-        <ItemCard /> 
-        <ItemCard />
-        <ItemCard />
-        <ItemCard />
-        <ItemCard />
-        <ItemCard />
+
+         {products.map((data)=>{
+             return(
+                <ItemCard  data={data} />
+             )
+         })}       
 
        </View>
     </ScrollView>
