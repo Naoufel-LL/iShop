@@ -62,7 +62,7 @@ const Register2 = ({navigation,route}) =>{
       const [focused3, setFocused3] = useState(false);
       const [firstName,setFirstName] = useState('')
       const [lastName,setLastName] = useState('')
-      const [phone,setPhone] = useState('')
+      const [phone,setPhone] = useState(0)
       const [adress,setAdress] = useState('')
       const [selectedCity, setSelectedCity] = useState('');
       const [date, setDate] = useState(new Date());
@@ -232,6 +232,7 @@ const handleSignUp =  () =>{
             birth:date,
             profilPic:imageUrl,
             verified: false,
+            banned:false
           });
           console.log("Document written with ID: ", docRef.id);
           updateProfile(auth.currentUser, {

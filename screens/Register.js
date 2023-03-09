@@ -58,12 +58,6 @@ const Register = ({navigation}) => {
     .then(userCredentials => {
       const user = userCredentials.user;
       console.log('Registered with:', user.email);
-      const docRef = addDoc(collection(db, "users"), {
-        email: email,
-        verified: false,
-        born: 2002
-      });
-      console.log("Document written with ID: ", docRef.id);
       navigation.replace("register2",{email:email,password:password})
     })
     .catch(error => alert(error.message))

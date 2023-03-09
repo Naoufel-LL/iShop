@@ -1,4 +1,4 @@
-import { View, Text,ScrollView,TouchableOpacity,Image} from 'react-native'
+import { View, Text,ScrollView,TouchableOpacity,Image, ActivityIndicator} from 'react-native'
 import React from 'react'
 import {auth,db} from '../firebase'
 import { Ionicons } from "@expo/vector-icons";
@@ -26,10 +26,13 @@ import {
   Poppins_900Black,
   Poppins_900Black_Italic,
 } from '@expo-google-fonts/poppins';
-import { collection, query, where, onSnapshot } from "firebase/firestore";
+import { collection, query, where, onSnapshot ,orderBy } from "firebase/firestore";
 import { getFirestore } from 'firebase/firestore';
+
+
 const Home = ({navigation}) => {
   const [products,setProducts]=useState([])
+  const [loading,setLoading]=useState(false)
   let [fontsLoaded] = useFonts({
     Poppins_100Thin,
     Poppins_100Thin_Italic,
@@ -50,49 +53,48 @@ const Home = ({navigation}) => {
     Poppins_900Black,
     Poppins_900Black_Italic,
   });
+  
   useLayoutEffect(()=>{
-    try {
-        const list = []
-        console.log("clear")
-        const q = query(collection(db, "produits"))
-       const unsubscribe = onSnapshot(q, (querySnapshot) => {
-     querySnapshot.forEach((doc) => {
-      const {
-        owner_id,
-        owner_name,
-        owner_pic,
-        owner_tel,
-        product_title,
-        product_price,
-        product_img,
-        product_desc,
-        product_categorie,
-        product_city,
-        product_stock,
-        product_condition,
-      } = doc.data();
-      list.push({
-        owner_id:owner_id,
-        owner_name:owner_name,
-        owner_pic:owner_pic,
-        owner_tel:owner_tel,
-        product_title:product_title,
-        product_price:product_price,
-        product_img:product_img,
-        product_desc:product_desc,
-        product_categorie:product_categorie,
-        product_city:product_city,
-        product_stock:product_stock,
-        product_condition:product_condition,
-      });
-       console.log(products)
-     });
-setProducts(list)
-
+    const list = []
+    console.log("clear")
+    const q = query(collection(db, "produits"),where("owner_id", "!=", auth.currentUser.uid))
+   const unsubscribe = onSnapshot(q, (querySnapshot) => {
+ querySnapshot.forEach((doc) => {
+  const {
+    owner_id,
+    owner_name,
+    owner_pic,
+    owner_tel,
+    product_title,
+    product_time,
+    product_price,
+    product_img,
+    product_desc,
+    product_categorie,
+    product_city,
+    product_stock,
+    product_condition,
+  } = doc.data();
+  list.push({
+    owner_id:owner_id,
+    owner_name:owner_name,
+    product_time:product_time,
+    owner_pic:owner_pic,
+    owner_tel:owner_tel,
+    product_title:product_title,
+    product_price:product_price,
+    product_img:product_img,
+    product_desc:product_desc,
+    product_categorie:product_categorie,
+    product_city:product_city,
+    product_stock:product_stock,
+    product_condition:product_condition,
+  });
+ });
+ setProducts(list)
+ setLoading(true)
+ console.log(products)
 });
-     } catch (error) {
-       alert(error)
-     }
   },[])
   /*console.log(new Date((1578316263249)))*/
  if(fontsLoaded){
@@ -101,18 +103,27 @@ setProducts(list)
       <View>
       <Header />
       </View>
-      <View style={{justifyContent:"center",alignItems:"center",paddingVertical:20}}> 
+      {!loading ? 
+       <View>
+        <ActivityIndicator size={20}/>
+       </View>
+      : 
+      <ScrollView>
+ <View style={{justifyContent:"center",alignItems:"center",paddingVertical:20}}> 
       <Image style={{width:'90%',height:200,borderRadius:20}} source={require("../assets/board3.png")}></Image>
        </View>
        <View style={{justifyContent:"center",alignItems:"center",width:"100%",flexDirection:"row",flexWrap:"wrap",}}>
 
          {products.map((data)=>{
              return(
-                <ItemCard  data={data} />
+              <TouchableOpacity onPress={()=>navigation.navigate("ProduitPage",{data:data})}>
+                <ItemCard key={data.owner_id} data={data} />
+              </TouchableOpacity>
              )
          })}       
-
        </View>
+        </ScrollView>
+      }
     </ScrollView>
   )
  }

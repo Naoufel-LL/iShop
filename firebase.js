@@ -11,13 +11,12 @@ import 'firebase/compat/storage'
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyA0Pn1DmhM5EPcyjXkaUYrTk03sRFNR5CA",
-  authDomain: "reactnativefr.firebaseapp.com",
-  projectId: "reactnativefr",
-  storageBucket: "reactnativefr.appspot.com",
-  messagingSenderId: "781709127135",
-  appId: "1:781709127135:web:39e3f352baa485cd90286a",
-  measurementId: "G-3Q35Q8KPWE"
+  apiKey: "AIzaSyBzAcZR9V2X8h3-VyketEZBdW4g8KVIzsM",
+  authDomain: "ishop-est.firebaseapp.com",
+  projectId: "ishop-est",
+  storageBucket: "ishop-est.appspot.com",
+  messagingSenderId: "101154694086",
+  appId: "1:101154694086:web:dab579109d1ec37af348c7"
 };
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig)

@@ -61,9 +61,9 @@ const AddProduit = ({navigation,route}) =>{
       const [price,setPrice] = useState(0)
       const [stock,setStock] = useState(0)
       const [description,setDescription] = useState('')
-      const [selectedCat, setSelectedCat] = useState('Neuf');
+      const [selectedCat, setSelectedCat] = useState('');
       const [selectedCity, setSelectedCity] = useState('');
-      const [selectedCondition, setSelectedCadition] = useState('');
+      const [selectedCondition, setSelectedCondition] = useState("Neuf");
 
       const [date, setDate] = useState(new Date());
       const [showPicker, setShowPicker] = useState(false);
@@ -231,9 +231,9 @@ const categories =[
 ];
 const conditions = [
     "Neuf",
-    "D’occasion - comme neuf",
-    "D’occasion - bon état",
-    "D’occasion - assez bon état"
+    "Occasion - comme neuf",
+    "Occasion - bon état",
+    "Occasion - assez bon état"
 ]
 const handleAddProduct =  () =>{
        if(title != '' && price != 0 && selectedCat != '' && description != '' && selectedCity != '' && stock != 0){
@@ -254,7 +254,7 @@ const handleAddProduct =  () =>{
           });
           console.log("Document written with ID: ", docRef.id);
           console.log("Product Added")
-          navigation.navigate("home")
+          navigation.replace("home")
        }else{
            Alert.alert("Error")
        }
@@ -268,7 +268,6 @@ const pickImage = async () => {
     quality: 1,
   });
 
-  console.log(result);
 
   if (!result.canceled) {
     setImage(result.assets[0].uri);
@@ -394,11 +393,11 @@ if(fontsLoaded){
         placeholder='Condition'
         selectedValue={selectedCondition}
         onValueChange={(itemValue, itemIndex) =>
-          {setSelectedCadition(itemValue);console.log(itemValue)}
+          {setSelectedCondition(itemValue);console.log(itemValue)}
         }
         style={{width: "100%",backgroundColor:Colors.back,marginVertical:15,borderRadius:10,padding:32}}
       >
-        {conditions.map(condition => (
+        {conditions.map((condition,itemIndex) => (
           <Picker.Item key={condition} label={condition} value={condition} />
         ))}
       </Picker>
