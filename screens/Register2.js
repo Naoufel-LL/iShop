@@ -236,16 +236,16 @@ const handleSignUp =  () =>{
           });
           console.log("Document written with ID: ", docRef.id);
           updateProfile(auth.currentUser, {
-            displayName: firstName + ' ' + lastName, photoURL: imageUrl,phoneNumber : phone
+            displayName: firstName + ' ' + lastName, photoURL: imageUrl,phoneNumber :phone
           }).then(() => {
-            console.log("updated")
+            console.log("updated",phone)
               // ...
           }).catch((error) => {
             // An error occurred
             // ...
           });
           setTimeout(function () {
-               navigation.navigate("home")
+               navigation.replace("home")
             }, 5000);         
         })
         .catch(error => alert(error.message))    

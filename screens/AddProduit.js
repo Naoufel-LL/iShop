@@ -108,7 +108,7 @@ const metadata = {
   contentType: 'image/jpeg'
 };
 // Upload file and metadata to the object 'images/mountains.jpg'
-const storageRef = ref(storage, 'profiles/' + Date.now());
+const storageRef = ref(storage, 'products/' + Date.now());
 const uploadTask = uploadBytesResumable(storageRef, Imageblob, metadata);
 
 // Listen for state changes, errors, and completion of the upload.

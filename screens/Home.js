@@ -113,7 +113,6 @@ const Home = ({navigation}) => {
       <Image style={{width:'90%',height:200,borderRadius:20}} source={require("../assets/board3.png")}></Image>
        </View>
        <View style={{justifyContent:"center",alignItems:"center",width:"100%",flexDirection:"row",flexWrap:"wrap",}}>
-
          {products.map((data)=>{
              return(
               <TouchableOpacity onPress={()=>navigation.navigate("ProduitPage",{data:data})}>

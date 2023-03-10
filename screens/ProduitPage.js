@@ -1,6 +1,7 @@
 import { View, Text,Image,StyleSheet } from 'react-native'
 import React from 'react'
 import Colors from '../constans/Colors'
+import { Ionicons } from "@expo/vector-icons";
 import {
     useFonts,
     Poppins_100Thin,
@@ -23,6 +24,7 @@ import {
     Poppins_900Black_Italic,
   } from '@expo-google-fonts/poppins';
 import { ScrollView } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 const ProduitPage = ({navigation,route}) => {
     let [fontsLoaded] = useFonts({
         Poppins_100Thin,
@@ -46,6 +48,7 @@ const ProduitPage = ({navigation,route}) => {
       });
       
 const data = route.params.data
+navigation.setOptions({ title: data.product_title})
 console.log(data)
 console.log(new Date((data.product_time)).toLocaleString())
  if(fontsLoaded){
@@ -59,7 +62,7 @@ console.log(new Date((data.product_time)).toLocaleString())
         <View style={styles.detailsContainer}>
           <Text style={styles.title}>{data.product_title}</Text>
           <Text style={styles.price}>{data.product_price} DH</Text>
-          <Text style={styles.description}>
+          <Text style={{fontFamily:'Poppins_600SemiBold',fontSize:20}}>
             Desciption
           </Text>
           <Text style={styles.description}>
@@ -67,15 +70,15 @@ console.log(new Date((data.product_time)).toLocaleString())
           </Text>
            <View>
            <View style={styles.row}>
-              <Text style={styles.text}>Catégorie</Text>
+              <Text style={styles.text}><Ionicons name='list' /> Catégorie</Text>
               <Text style={styles.text}>{data.product_categorie}</Text>
             </View>
             <View style={styles.row}>
-              <Text style={styles.text}>Ville</Text>
+              <Text style={styles.text}><Ionicons name="pin" /> Ville</Text>
               <Text style={styles.text}>{data.product_city}</Text>
             </View>
             <View style={styles.row}>
-              <Text style={styles.text}>Stock</Text>
+              <Text style={styles.text}><Ionicons name="gift" /> Stock</Text>
               <Text style={styles.text}>{data.product_stock}</Text>
             </View>
             <View style={styles.row}>
@@ -83,7 +86,50 @@ console.log(new Date((data.product_time)).toLocaleString())
               <Text style={styles.text}>{data.product_condition}</Text>
             </View>
            </View>
-           <Text style={styles.text}>Publiée le {new Date((data.product_time)).toLocaleString("fr")}</Text>
+           <Text></Text>
+           <Text style={styles.text}><Ionicons name='time' />Publiée le {new Date((data.product_time)).toLocaleString("fr")}</Text>
+        </View>
+        
+        <View style={{justifyContent:'center',alignContent:'center',width:'100%',alignItems:'center'}}>
+        <TouchableOpacity
+          onPress={()=>{}}
+          style={{
+            width:'70%',
+            padding: 10 * 2,
+            backgroundColor: Colors.main,
+            marginVertical: 10 * 3,
+            borderRadius: 10,
+            shadowColor: Colors.main,
+            shadowOffset: {
+              width: 0,
+              height: 10,
+            },
+            shadowOpacity: 0.3,
+            shadowRadius: 10,
+          }}
+        >
+          <Text
+            style={{
+              fontFamily: "Poppins_600SemiBold",
+              color:'#fff',
+              textAlign: "center",
+              fontSize: 19,
+            }}
+          >
+              Demander
+          </Text>
+        </TouchableOpacity>
+        <View  style={{borderRadius:5,padding:10,width:'90%',flexDirection:'row',justifyContent:'space-around',alignItems:'center',backgroundColor:Colors.back}}>
+           <Image style={{width:50,height:50,borderRadius:50}} source={{uri: data.owner_pic}}></Image>
+           <View>
+           <Text style={styles.text2}>{data.owner_name}</Text>
+           <Text style={styles.text2}>Vendeur</Text>
+           </View>
+           <TouchableOpacity onPress={()=>navigation.navigate("Seller",{sellerId:data.owner_id,sellerName:data.owner_name,sellerPic:data.owner_pic})}>
+            <Text style={{fontFamily:'Poppins_600SemiBold'}}>View Profil</Text>
+           </TouchableOpacity>
+        </View>
+        <Text></Text>
         </View>
       </View>
         </ScrollView>
@@ -130,6 +176,9 @@ const styles = StyleSheet.create({
     },
     text:{
       fontFamily:"Poppins_400Regular", 
+    },
+    text2:{
+      fontFamily:"Poppins_400Regular",
     }
   });
   

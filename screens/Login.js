@@ -58,7 +58,7 @@ const Login = ({navigation}) => {
         const user = userCredentials.user;
         console.log('Logged in with:', user.email);
         Keyboard.dismiss()
-        navigation.navigate("home")
+        navigation.replace("home")
       })
       .catch(error => alert(error.message))
   }
