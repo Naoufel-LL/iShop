@@ -1,6 +1,7 @@
 import { View, Text,Image,StyleSheet } from 'react-native'
 import React from 'react'
 import Colors from '../constans/Colors'
+import moment from 'moment';
 import { Ionicons } from "@expo/vector-icons";
 import {
     useFonts,
@@ -50,7 +51,8 @@ const ProduitPage = ({navigation,route}) => {
 const data = route.params.data
 navigation.setOptions({ title: data.product_title})
 console.log(data)
-console.log(new Date((data.product_time)).toLocaleString())
+const dateTimeAgo = moment(new Date(data.product_time)).fromNow();
+
  if(fontsLoaded){
     return (
         <ScrollView>
@@ -87,7 +89,7 @@ console.log(new Date((data.product_time)).toLocaleString())
             </View>
            </View>
            <Text></Text>
-           <Text style={styles.text}><Ionicons name='time' />Publiée le {new Date((data.product_time)).toLocaleString("fr")}</Text>
+           <Text style={styles.text}><Ionicons name='time' /> Posted  {dateTimeAgo}</Text>
         </View>
         
         <View style={{justifyContent:'center',alignContent:'center',width:'100%',alignItems:'center'}}>
@@ -116,7 +118,7 @@ console.log(new Date((data.product_time)).toLocaleString())
               fontSize: 19,
             }}
           >
-              Demander
+              Commander
           </Text>
         </TouchableOpacity>
         <View  style={{borderRadius:5,padding:10,width:'90%',flexDirection:'row',justifyContent:'space-around',alignItems:'center',backgroundColor:Colors.back}}>

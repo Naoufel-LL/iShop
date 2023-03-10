@@ -118,7 +118,8 @@ const CatergoriePage = ({navigation,route}) => {
         style={[
           { fontFamily:"Poppins_400Regular",
           fontSize:15,
-          padding: 5 * 2,
+          padding: 7 * 2,
+          fontSize:17,
           backgroundColor: Colors.back,
           borderRadius: 30,
           marginVertical: 20,width:"90%"},
@@ -136,9 +137,9 @@ const CatergoriePage = ({navigation,route}) => {
              <View style={{justifyContent:"center",alignItems:"center",width:"100%",flexDirection:"row",flexWrap:"wrap",}}>
                {filtred_products?.map((data)=>{
                    return(
-                    <TouchableOpacity onPress={()=>navigation.navigate("ProduitPage",{data:data})}>
-                      <ItemCard key={data.owner_id} data={data} />
-                    </TouchableOpacity>
+                    <TouchableOpacity style={{width:"50%"}} onPress={()=>navigation.navigate("ProduitPage",{data:data})}>
+                <ItemCard key={data.owner_id} data={data} />
+              </TouchableOpacity>
                    )
                })}       
              </View>

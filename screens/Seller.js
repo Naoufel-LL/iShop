@@ -101,12 +101,12 @@ const Seller = ({navigation,route}) => {
              </View>
             : 
             <ScrollView>
-             <View style={{justifyContent:"center",alignItems:"center",width:"100%",flexDirection:"row",flexWrap:"wrap",}}>
+             <View style={{justifyContent:"center",alignItems:"center",flexDirection:"row",flexWrap:"wrap",}}>
                {products.map((data)=>{
                    return(
-                    <TouchableOpacity onPress={()=>navigation.navigate("ProduitPage",{data:data})}>
-                      <ItemCard key={data.owner_id} data={data} />
-                    </TouchableOpacity>
+                    <TouchableOpacity style={{width:"50%"}} onPress={()=>navigation.navigate("ProduitPage",{data:data})}>
+                    <ItemCard key={data.owner_id} data={data} />
+                  </TouchableOpacity>
                    )
                })}       
              </View>

@@ -24,7 +24,7 @@ import {
 import { useState } from 'react';
 import Colors from '../constans/Colors';
 import { Ionicons } from "@expo/vector-icons";
-import {createUserWithEmailAndPassword} from "firebase/auth";
+import {createUserWithEmailAndPassword,sendEmailVerification} from "firebase/auth";
 import {auth,db} from "../firebase"
 import { collection, addDoc } from "firebase/firestore"; 
 console.log(auth)
@@ -58,6 +58,10 @@ const Register = ({navigation}) => {
     .then(userCredentials => {
       const user = userCredentials.user;
       console.log('Registered with:', user.email);
+      sendEmailVerification(auth.currentUser)
+      .then(() => {
+        console.log("Email sent to ",email)
+  });
       navigation.replace("register2",{email:email,password:password})
     })
     .catch(error => alert(error.message))
