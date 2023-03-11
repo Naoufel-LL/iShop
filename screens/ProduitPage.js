@@ -171,6 +171,7 @@ const styles = StyleSheet.create({
     },
     row:{
         borderBottomWidth:0.5,
+        borderBottomColor:"rgba(0,0,0,0.2)",
         flexDirection:"row",
         justifyContent:"space-between",
         alignItems:"center",

@@ -60,7 +60,7 @@ const Header = () => {
       }
      if(fontsLoaded){
         return (
-            <View style={{width:'100%',height:80,backgroundColor:Colors.main,justifyContent:'space-between',flexDirection:'row',alignItems:'center',padding:20}}>
+            <View style={{width:'100%',height:75,backgroundColor:Colors.main,justifyContent:'space-between',flexDirection:'row',alignItems:'center',padding:20}}>
                 <TouchableOpacity>
                 <Avatar image={{ uri: auth.currentUser.photoURL }} />
                 </TouchableOpacity>

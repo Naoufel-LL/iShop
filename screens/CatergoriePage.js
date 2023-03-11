@@ -56,7 +56,7 @@ const CatergoriePage = ({navigation,route}) => {
     useLayoutEffect(()=>{
         const list = []
         console.log("clear")
-        const q = query(collection(db, "produits"),where("product_categorie", "==",categorie))
+        const q = query(collection(db, "produits"),where("product_categorie", "==",categorie),where("owner_id", "!=",auth.currentUser.uid))
        const unsubscribe = onSnapshot(q, (querySnapshot) => {
      querySnapshot.forEach((doc) => {
       const {

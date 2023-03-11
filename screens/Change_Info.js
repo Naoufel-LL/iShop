@@ -1,7 +1,10 @@
 import { View,Text,SafeAreaView,TextInput,TouchableOpacity, ScrollView,Image} from 'react-native'
 import {Picker} from '@react-native-picker/picker'
+import DateTimePicker from '@react-native-community/datetimepicker';
 import React from 'react'
+import {updateProfile,sendEmailVerification} from "firebase/auth";
 import {ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+
 import {
   useFonts,
   Poppins_100Thin,
@@ -27,12 +30,13 @@ import {
 import { useState } from 'react';
 import Colors from '../constans/Colors';
 import { Ionicons } from "@expo/vector-icons";
+import {signInWithEmailAndPassword} from "firebase/auth"
 import * as ImagePicker from 'expo-image-picker';
 
 import {auth,db,storage} from "../firebase"
 import { collection, addDoc } from "firebase/firestore"; 
 import { Alert } from 'react-native';
-const AddProduit = ({navigation,route}) =>{
+const Change_Info = ({navigation,route}) =>{
     let [fontsLoaded] = useFonts({
         Poppins_100Thin,
         Poppins_100Thin_Italic,
@@ -55,19 +59,16 @@ const AddProduit = ({navigation,route}) =>{
       });
       const [focused, setFocused] = useState(false);
       const [focused1, setFocused1] = useState(false);
+      const [focused2, setFocused2] = useState(false);
       const [focused3, setFocused3] = useState(false);
-      const [focused4, setFocused4] = useState(false);
-      const [title,setTitle] = useState('')
-      const [price,setPrice] = useState(0)
-      const [stock,setStock] = useState(0)
-      const [description,setDescription] = useState('')
-      const [selectedCat, setSelectedCat] = useState('');
+      const [firstName,setFirstName] = useState('')
+      const [lastName,setLastName] = useState('')
+      const [phone,setPhone] = useState(0)
+      const [adress,setAdress] = useState('')
       const [selectedCity, setSelectedCity] = useState('');
-      const [selectedCondition, setSelectedCondition] = useState("Neuf");
-
       const [date, setDate] = useState(new Date());
       const [showPicker, setShowPicker] = useState(false);
-      const [image, setImage] = useState();
+      const [image, setImage] = useState("https://mui.com/static/images/avatar/1.jpg");
       const [imageUrl, setImageUrl] = useState("https://mui.com/static/images/avatar/1.jpg");
       const [dateText,setDateText] = useState("Select Your Birthday")
       const [uploading, setUploading] = useState(false)
@@ -108,7 +109,7 @@ const metadata = {
   contentType: 'image/jpeg'
 };
 // Upload file and metadata to the object 'images/mountains.jpg'
-const storageRef = ref(storage, 'products/' + Date.now());
+const storageRef = ref(storage, 'profiles/' + Date.now());
 const uploadTask = uploadBytesResumable(storageRef, Imageblob, metadata);
 
 // Listen for state changes, errors, and completion of the upload.
@@ -214,60 +215,18 @@ const cities = [
   'Tiznit',
   'Youssoufia',
 ];
-const categories =[
-    'Sélectioner Catégorie',
-    'Beauté',
-    'Femme',
-    'Homme',
-    'Enfant',
-    'TV & HITECH',
-    'Maison & Cuisin',
-    'Informatique',
-    'Jeux Vidéo & Consoles',
-    'Sport',
-    'Acessoires Auto Moto',
-    'SuperMarché',
-    'Téléphone'
-];
-const conditions = [
-    "Neuf",
-    "Occasion - comme neuf",
-    "Occasion - bon état",
-    "Occasion - assez bon état"
-]
-const handleAddProduct =  () =>{
-       if(title != '' && price != 0 && selectedCat != '' && description != '' && selectedCity != '' && stock != 0){
-        const docRef = addDoc(collection(db, "produits"), {
-              owner_id:auth.currentUser.uid,
-              owner_name : auth.currentUser.displayName,
-              owner_pic : auth.currentUser.photoURL,
-              owner_tel: auth.currentUser.phoneNumber,
-              product_time:Date.now(),
-              product_title:title,
-              product_price:price,
-              product_img:imageUrl,
-              product_desc:description,
-              product_categorie:selectedCat,
-              product_city:selectedCity,
-              product_stock:stock,
-              product_condition:selectedCondition,
-          });
-          console.log("Document written with ID: ", docRef.id);
-          console.log("Product Added")
-          navigation.replace("home")
-       }else{
-           Alert.alert("Error")
-       }
-}
+
 
 const pickImage = async () => {
   // No permissions request is necessary for launching the image library
   let result = await ImagePicker.launchImageLibraryAsync({
     mediaTypes: ImagePicker.MediaTypeOptions.All,
+    allowsEditing: true,
     aspect: [4, 3],
     quality: 1,
   });
 
+  console.log(result);
 
   if (!result.canceled) {
     setImage(result.assets[0].uri);
@@ -280,22 +239,22 @@ if(fontsLoaded){
     <SafeAreaView style={{paddingTop:'10%',justifyContent:'center',alignContent:'center',width:"100%",alignItems:"center"}}>
       <ScrollView style={{width:"100%"}}>
         <Text style={{fontFamily:"Poppins_700Bold",fontSize:25,color:Colors.main,textAlign: 'center'}}>
-         Ajouter un Article
+         Register Here
        </Text>
        <Text style={{fontFamily:"Poppins_600SemiBold",fontSize:15,paddingVertical:10,textAlign:'center',width:'100%'}}>
-         Ajouter les details de ton produit
+         Fill the form to register
        </Text>
        <View style={{width:'100%',justifyContent:"center",alignItems:'center',paddingVertical:20}}>
        {image && <Image source={{ uri: image }} style={{ width: 100, height: 100 }}></Image>}
          <TouchableOpacity onPress={()=>{pickImage()}}>
           <View style={{padding:10,backgroundColor:Colors.main,marginVertical:10,borderRadius:5}}>
-          <Text style={{fontFamily:"Poppins_400Regular",color:'#fff'}}>Upload Image</Text>
+          <Text style={{fontFamily:"Poppins_400Regular",color:'#fff'}}>Upload Your Image</Text>
           </View>
          </TouchableOpacity>
          <TextInput
         required
-        value={title}
-        onChangeText={(text)=>setTitle(text)}
+        value={firstName}
+        onChangeText={(text)=>setFirstName(text)}
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
         style={[
@@ -313,17 +272,14 @@ if(fontsLoaded){
             shadowOpacity: 0.2,
             shadowRadius: 10,
           },
-        ]}
-        maxLength={20}
-        placeholder="Titre">
+        ]} placeholder="Enter Your FirstName">
           </TextInput>
           <TextInput
-          keyboardType='numeric'
           required
            onFocus={() => setFocused1(true)}
            onBlur={() => setFocused1(false)}
-          value={price}
-          onChangeText={(text)=>setPrice(text)}
+          value={lastName}
+          onChangeText={(text)=>setLastName(text)}
            style={[
             { fontFamily:"Poppins_400Regular",
             fontSize:15,
@@ -340,38 +296,43 @@ if(fontsLoaded){
               shadowRadius: 10,
             },
           ]}
-          maxLength={7}
-          placeholder="Prix avec DH">
+          placeholder="Enter Your LastName">
           </TextInput>
-          <View style={{width:"80%",flexDirection:"row",justifyContent:'center',alignItems:"center"}}>
-      <View style={{flexDirection: 'row', alignItems: 'center' }}>
-      <Picker
-        placeholder='Select City'
-        selectedValue={selectedCat}
-        onValueChange={(itemValue, itemIndex) =>
-          {setSelectedCat(itemValue);console.log(itemValue)}
-        }
-        style={{width: "100%",backgroundColor:Colors.back,marginVertical:15,borderRadius:10,padding:32}}
-      >
-        {categories.map(cat => (
-          <Picker.Item key={cat} label={cat} value={cat} />
-        ))}
-      </Picker>
-      </View>
-    </View>
           <TextInput
           required
-          maxLength={200}
-           onFocus={() => setFocused3(true)}
-           onBlur={() => setFocused3(false)}
-          value={description}
-          onChangeText={(text)=>setDescription(text)}
+           onFocus={() => setFocused2(true)}
+           onBlur={() => {setFocused2(false);validerTel(phone)}}
+          value={phone}
+          onChangeText={(text)=>setPhone(text)}
            style={[
             { fontFamily:"Poppins_400Regular",
             fontSize:15,
-            height:150,
-            padding:20,
-            textAlignVertical: 'top',
+            padding: 10 * 2,
+            backgroundColor: Colors.back,
+            borderRadius: 10,
+            marginVertical: 10,width:"80%"},
+            focused2 && {
+              borderWidth: 3,
+              borderColor: Colors.main,
+              shadowOffset: { width: 4, height: 10 },
+              shadowColor: Colors.main,
+              shadowOpacity: 0.2,
+              shadowRadius: 10,
+            },
+          ]}
+          keyboardType='numeric'
+          placeholder="Enter Your Phone Number">
+          </TextInput>
+          <TextInput
+          required
+           onFocus={() => setFocused3(true)}
+           onBlur={() => setFocused3(false)}
+          value={adress}
+          onChangeText={(text)=>setAdress(text)}
+           style={[
+            { fontFamily:"Poppins_400Regular",
+            fontSize:15,
+            padding: 10 * 2,
             backgroundColor: Colors.back,
             borderRadius: 10,
             marginVertical: 10,width:"80%"},
@@ -384,30 +345,13 @@ if(fontsLoaded){
               shadowRadius: 10,
             },
           ]}
-          multiline={true}
-          placeholder="Description">
+          placeholder="Enter Your Adresse">
         </TextInput>
-        <View style={{width:"80%",flexDirection:"row",justifyContent:'center',alignItems:"center"}}>
-        <View style={{flexDirection: 'row', alignItems: 'center' }}>
-      <Picker
-        placeholder='Condition'
-        selectedValue={selectedCondition}
-        onValueChange={(itemValue, itemIndex) =>
-          {setSelectedCondition(itemValue);console.log(itemValue)}
-        }
-        style={{width: "100%",backgroundColor:Colors.back,marginVertical:15,borderRadius:10,padding:32}}
-      >
-        {conditions.map((condition,itemIndex) => (
-          <Picker.Item key={condition} label={condition} value={condition} />
-        ))}
-      </Picker>
-      </View>
-        </View>
-        
+      
     <View style={{width:"80%",flexDirection:"row",justifyContent:'center',alignItems:"center"}}>
       <View style={{flexDirection: 'row', alignItems: 'center' }}>
       <Picker
-        placeholder='Ville'
+        placeholder='Select City'
         selectedValue={selectedCity}
         onValueChange={(itemValue, itemIndex) =>
           {setSelectedCity(itemValue);console.log(itemValue)}
@@ -420,37 +364,19 @@ if(fontsLoaded){
       </Picker>
       </View>
     </View>
-    <TextInput
-          keyboardType='numeric'
-          required
-           onFocus={() => setFocused4(true)}
-           onBlur={() => setFocused4(false)}
-          value={stock}
-          onChangeText={(text)=>setStock(text)}
-           style={[
-            { fontFamily:"Poppins_400Regular",
-            fontSize:15,
-            padding: 10 * 2,
-            backgroundColor: Colors.back,
-            borderRadius: 10,
-            marginVertical: 10,width:"80%"},
-            focused4 && {
-              borderWidth: 3,
-              borderColor: Colors.main,
-              shadowOffset: { width: 4, height: 10 },
-              shadowColor: Colors.main,
-              shadowOpacity: 0.2,
-              shadowRadius: 10,
-            },
-          ]}
-          maxLength={7}
-          placeholder="Stock">
-          </TextInput>
-          <View style={{width:"80%",flexDirection:"row",justifyContent:'center',alignItems:"center"}}>
-            
-          </View>
+      <TouchableOpacity style={{width:"80%",backgroundColor:Colors.back,padding:20,borderRadius:10,marginVertical:10}} onPress={() => setShowPicker(true)}>
+        <Text style={{fontFamily:"Poppins_400Regular"}}>{dateText}</Text>
+      </TouchableOpacity>
+      {showPicker && 
+        <DateTimePicker
+          value={date}
+          mode="date"
+          display="spinner"
+          onChange={onChangeDate}
+        />
+      }
       <TouchableOpacity
-          onPress={()=>handleAddProduct()}
+          //onPress={navigation.navigate("Profil")}
           style={{
             width:'70%',
             padding: 10 * 2,
@@ -474,8 +400,8 @@ if(fontsLoaded){
               fontSize: 19,
             }}
           >
-             Ajouter
-           </Text>
+             Save changes
+          </Text>
         </TouchableOpacity>
       
           
@@ -486,6 +412,7 @@ if(fontsLoaded){
     </SafeAreaView>
  )
  }
-}
+ }
 
-export default AddProduit
+
+export default Change_Info

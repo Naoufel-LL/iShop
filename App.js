@@ -14,7 +14,10 @@ import ProduitPage from './screens/ProduitPage';
 import CatergoriePage from './screens/CatergoriePage';
 import Seller from './screens/Seller';
 import Colors from './constans/Colors';
-
+import Change_Info from './screens/Change_Info';
+import Support from './screens/Support';
+import Change_Password from './screens/Change_Password';
+import Myshop from './screens/Myshop'
 const Stack = createNativeStackNavigator();
 
 function App() {
@@ -41,7 +44,11 @@ function App() {
            } ,titleStyle:{color:'white'},  headerTitleStyle: {
             color:'#fff',
           },headerTitleAlign:'center'}}/>
-      <Stack.Screen name="addProduit" component={AddProduit}  options={{headerShown:false}} />
+    <Stack.Screen name="addProduit" component={AddProduit}  options={{headerShown:false}} />
+      <Stack.Screen name="Myshop" component={Myshop}  options={{headerShown:false}} />
+      <Stack.Screen name="Change_Info" component={Change_Info}  options={{headerShown:false}} />
+      <Stack.Screen name="Change_Password" component={Change_Password}  options={{headerShown:false}} />
+      <Stack.Screen name="Support" component={Support}  options={{headerShown:false}} />
       </Stack.Navigator>
     </NavigationContainer>
 

@@ -4,7 +4,7 @@ import Colors from '../constans/Colors'
 
 export default function CategorieItem({imgUrl}) {
   return (
-    <View style={{position:'relative',flexDirection:'row',justifyContent:'space-around',alignItems:'center',marginVertical:9,width:'90%',height:130,backgroundColor:'#fff',borderRadius:10,shadowColor: "#000",shadowOffset: {width: 0,height: 2,},shadowOpacity: 0.25,shadowRadius: 3.84,elevation: 3}}>
+    <View style={{position:'relative',flexDirection:'row',justifyContent:'space-around',alignItems:'center',marginVertical:9,width:'90%',height:100,backgroundColor:'#fff',borderRadius:10,shadowColor: "#000",shadowOffset: {width: 0,height: 2,},shadowOpacity: 0.25,shadowRadius: 3.84,elevation: 3}}>
       <Image 
         source={{uri: imgUrl}}  
         resizeMode='cover'
