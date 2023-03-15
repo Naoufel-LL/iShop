@@ -236,7 +236,7 @@ const handleSignUp =  () =>{
           });
           console.log("Document written with ID: ", docRef.id);
           updateProfile(auth.currentUser, {
-            displayName: firstName + ' ' + lastName, photoURL: imageUrl,phoneNumber :phone
+            displayName: firstName + ' ' + lastName, photoURL: imageUrl,phoneNumber : phone
           }).then(() => {
             console.log("updated",phone)
               // ...

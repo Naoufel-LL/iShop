@@ -71,6 +71,8 @@ const Change_Password = ({navigation}) => {
 
 const styles = StyleSheet.create({
   container: {
+    justifyContent:'center',
+    height:'100%',
     flex: 1,
     backgroundColor: '#fff',
     paddingHorizontal: 20,

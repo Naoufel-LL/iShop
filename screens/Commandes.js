@@ -28,14 +28,14 @@ import {
 import ItemCard from '../components/ItemCard';
 import { collection, query, where, onSnapshot ,orderBy } from "firebase/firestore";
 import OrderItem from '../components/OrderItem';
-import Header from './Header'
-const Orders = ({navigation}) => {
-  const [orders,setOrders]=useState([])
+
+const Commandes = ({navigation}) => {
+  const [commandes,setCommandes]=useState([])
   const [loading,setLoading]=useState(false)
 
   useLayoutEffect(()=>{
     const list = []
-    const q = query(collection(db, "commandes"),where("buyer_id", "==", auth.currentUser.uid))
+    const q = query(collection(db, "commandes"),where("seller_id", "==", auth.currentUser.uid))
    const unsubscribe = onSnapshot(q, (querySnapshot) => {
  querySnapshot.forEach((doc) => {
   const {
@@ -75,12 +75,11 @@ const Orders = ({navigation}) => {
     statut:statut,
   });
  });
- setOrders(list)
+ setCommandes(list)
  setLoading(true)
 });
   },[])
-  console.log(orders)
-  navigation.setOptions({ tabBarBadge: orders.length})
+  navigation.setOptions({ tabBarBadge: commandes.length})
   return (
     <ScrollView>
       {!loading ? 
@@ -90,9 +89,8 @@ const Orders = ({navigation}) => {
       : 
       <ScrollView>
        <View style={{justifyContent:"center",alignItems:"center",width:"100%",}}>
-          <Header />
-          <Text>Orders</Text> 
-          {orders.map((data)=>{
+          <Text>Commandes</Text> 
+          {commandes.map((data)=>{
               return(
                 <TouchableOpacity>
                 <OrderItem data={data}/>
@@ -106,4 +104,4 @@ const Orders = ({navigation}) => {
   )
 }
 
-export default Orders
+export default Commandes

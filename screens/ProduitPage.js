@@ -94,7 +94,7 @@ const dateTimeAgo = moment(new Date(data.product_time)).fromNow();
         
         <View style={{justifyContent:'center',alignContent:'center',width:'100%',alignItems:'center'}}>
         <TouchableOpacity
-          onPress={()=>{}}
+          onPress={()=>navigation.navigate("CommanderPage",{data:data})}
           style={{
             width:'70%',
             padding: 10 * 2,

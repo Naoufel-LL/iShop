@@ -88,7 +88,9 @@ const CatergoriePage = ({navigation,route}) => {
         product_city:product_city,
         product_stock:product_stock,
         product_condition:product_condition,
+        product_id:doc.id
       });
+       console.log(doc.id)
      });
      setProducts(list)
      setLoading(true)

@@ -4,7 +4,8 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import React from 'react'
 import {updateProfile,sendEmailVerification} from "firebase/auth";
 import {ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-
+import {query, where, onSnapshot ,orderBy } from "firebase/firestore";
+import { useLayoutEffect } from 'react';
 import {
   useFonts,
   Poppins_100Thin,
@@ -61,18 +62,9 @@ const Change_Info = ({navigation,route}) =>{
       const [focused1, setFocused1] = useState(false);
       const [focused2, setFocused2] = useState(false);
       const [focused3, setFocused3] = useState(false);
-      const [firstName,setFirstName] = useState('')
-      const [lastName,setLastName] = useState('')
-      const [phone,setPhone] = useState(0)
-      const [adress,setAdress] = useState('')
-      const [selectedCity, setSelectedCity] = useState('');
-      const [date, setDate] = useState(new Date());
-      const [showPicker, setShowPicker] = useState(false);
-      const [image, setImage] = useState("https://mui.com/static/images/avatar/1.jpg");
-      const [imageUrl, setImageUrl] = useState("https://mui.com/static/images/avatar/1.jpg");
-      const [dateText,setDateText] = useState("Select Your Birthday")
+      const [thisUser,setThisUser] = useState([])
       const [uploading, setUploading] = useState(false)
-      const onChangeDate = (event, selectedDate) => {
+     /* const onChangeDate = (event, selectedDate) => {
         setShowPicker(false);
         if (selectedDate) {
           setDate(selectedDate);
@@ -104,7 +96,6 @@ const Change_Info = ({navigation,route}) =>{
           xhr.send(null);
         });
         // Create the file metadata
-         /** @type {any} */
 const metadata = {
   contentType: 'image/jpeg'
 };
@@ -151,7 +142,7 @@ uploadTask.on('state_changed',
       console.log('File available at', downloadURL);
       setImageUrl(downloadURL)
       console.log(imageUrl)
-    });
+    })
   }
 );
       }
@@ -215,9 +206,20 @@ const cities = [
   'Tiznit',
   'Youssoufia',
 ];
+*/
+console.log(auth.currentUser.email)
+useLayoutEffect(()=>{
+  const q = query(collection(db, "users"),where("email", "==",auth.currentUser.email))
+  const unsubscribe = onSnapshot(q, (querySnapshot) => {
+querySnapshot.forEach((doc) => {
+  console.log(doc.data())
+  setThisUser(doc.data())
+});
+console.log(thisUser)
+});
+},[])
 
-
-const pickImage = async () => {
+/*const pickImage = async () => {
   // No permissions request is necessary for launching the image library
   let result = await ImagePicker.launchImageLibraryAsync({
     mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -233,11 +235,11 @@ const pickImage = async () => {
     console.log(image)
     uploadImage(result.assets[0].uri)
   }
-};
+};*/
 if(fontsLoaded){
  return(
     <SafeAreaView style={{paddingTop:'10%',justifyContent:'center',alignContent:'center',width:"100%",alignItems:"center"}}>
-      <ScrollView style={{width:"100%"}}>
+    <ScrollView style={{width:"100%"}}>
         <Text style={{fontFamily:"Poppins_700Bold",fontSize:25,color:Colors.main,textAlign: 'center'}}>
          Register Here
        </Text>
@@ -245,7 +247,7 @@ if(fontsLoaded){
          Fill the form to register
        </Text>
        <View style={{width:'100%',justifyContent:"center",alignItems:'center',paddingVertical:20}}>
-       {image && <Image source={{ uri: image }} style={{ width: 100, height: 100 }}></Image>}
+       {thisUser.profilPic && <Image source={{ uri: thisUser.profilPic }} style={{ width: 100, height: 100 }}></Image>}
          <TouchableOpacity onPress={()=>{pickImage()}}>
           <View style={{padding:10,backgroundColor:Colors.main,marginVertical:10,borderRadius:5}}>
           <Text style={{fontFamily:"Poppins_400Regular",color:'#fff'}}>Upload Your Image</Text>
@@ -253,8 +255,7 @@ if(fontsLoaded){
          </TouchableOpacity>
          <TextInput
         required
-        value={firstName}
-        onChangeText={(text)=>setFirstName(text)}
+        value={thisUser.firstName}
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
         style={[
@@ -278,8 +279,7 @@ if(fontsLoaded){
           required
            onFocus={() => setFocused1(true)}
            onBlur={() => setFocused1(false)}
-          value={lastName}
-          onChangeText={(text)=>setLastName(text)}
+          value={thisUser.lastName}
            style={[
             { fontFamily:"Poppins_400Regular",
             fontSize:15,
@@ -302,8 +302,7 @@ if(fontsLoaded){
           required
            onFocus={() => setFocused2(true)}
            onBlur={() => {setFocused2(false);validerTel(phone)}}
-          value={phone}
-          onChangeText={(text)=>setPhone(text)}
+          value={thisUser.phone}
            style={[
             { fontFamily:"Poppins_400Regular",
             fontSize:15,
@@ -327,8 +326,7 @@ if(fontsLoaded){
           required
            onFocus={() => setFocused3(true)}
            onBlur={() => setFocused3(false)}
-          value={adress}
-          onChangeText={(text)=>setAdress(text)}
+          value={thisUser.adress}
            style={[
             { fontFamily:"Poppins_400Regular",
             fontSize:15,
@@ -347,36 +345,8 @@ if(fontsLoaded){
           ]}
           placeholder="Enter Your Adresse">
         </TextInput>
-      
-    <View style={{width:"80%",flexDirection:"row",justifyContent:'center',alignItems:"center"}}>
-      <View style={{flexDirection: 'row', alignItems: 'center' }}>
-      <Picker
-        placeholder='Select City'
-        selectedValue={selectedCity}
-        onValueChange={(itemValue, itemIndex) =>
-          {setSelectedCity(itemValue);console.log(itemValue)}
-        }
-        style={{width: "100%",backgroundColor:Colors.back,marginVertical:15,borderRadius:10,padding:32}}
-      >
-        {cities.map(city => (
-          <Picker.Item key={city} label={city} value={city} />
-        ))}
-      </Picker>
-      </View>
-    </View>
-      <TouchableOpacity style={{width:"80%",backgroundColor:Colors.back,padding:20,borderRadius:10,marginVertical:10}} onPress={() => setShowPicker(true)}>
-        <Text style={{fontFamily:"Poppins_400Regular"}}>{dateText}</Text>
-      </TouchableOpacity>
-      {showPicker && 
-        <DateTimePicker
-          value={date}
-          mode="date"
-          display="spinner"
-          onChange={onChangeDate}
-        />
-      }
       <TouchableOpacity
-          //onPress={navigation.navigate("Profil")}
+          onPress={()=>{}}
           style={{
             width:'70%',
             padding: 10 * 2,
@@ -400,7 +370,7 @@ if(fontsLoaded){
               fontSize: 19,
             }}
           >
-             Save changes
+             Continue
           </Text>
         </TouchableOpacity>
       

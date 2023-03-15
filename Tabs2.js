@@ -2,10 +2,9 @@ import React from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from "@expo/vector-icons";
 import Colors from './constans/Colors';
-import Home from './screens/Home';
-import Orders from './screens/Orders';
-import Categories from './screens/Categories'
-import Profil from './screens/Profil';
+import Commandes from './screens/Commandes';
+import SellerProfil from './screens/SellerProfil'
+import Myshop from './screens/Myshop';
 export default function Tabs() {
     const Tab = createBottomTabNavigator()
   return (
@@ -14,8 +13,7 @@ export default function Tabs() {
         headerShown:false,
         headerTitleAlign:'center',
          tabBarStyle:{
-          paddingVertical:5,height:70,paddingBottom:5
-
+             paddingVertical:5,height:70,paddingBottom:5
          },
           tabBarIcon: ({ focused, color, size }) => {
             let iconName;
@@ -26,12 +24,12 @@ export default function Tabs() {
                 : 'soccer-ball-o';
             } else if (route.name === 'Home') {
               iconName = focused ? 'home' : 'home';
-            } else if (route.name == 'Categories'){
-                iconName = focused ? 'list' : 'list';
-              }else if (route.name == 'Orders'){
+            } else if (route.name == 'Myshop'){
+                iconName = focused ? 'shirt' : 'shirt';
+              }else if (route.name == 'Commandes'){
                 iconName = focused ? 'cube' : 'cube';
-              }else if (route.name == 'Profil'){
-                iconName = focused ? 'person' : 'person';
+              }else if (route.name == 'Shop'){
+                iconName = focused ? 'settings' : 'settings';
               }
 
             // You can return any component that you like here!
@@ -43,10 +41,9 @@ export default function Tabs() {
           inactiveTintColor: 'gray',
         }}
       >
-        <Tab.Screen name="Home" component={Home}></Tab.Screen>
-        <Tab.Screen name="Categories" component={Categories} ></Tab.Screen>
-         <Tab.Screen name="Orders" component={Orders} ></Tab.Screen>
-         <Tab.Screen name="Profil" component={Profil} ></Tab.Screen>
+         <Tab.Screen name="Myshop" component={Myshop} ></Tab.Screen>
+         <Tab.Screen name="Commandes" component={Commandes} ></Tab.Screen>
+         <Tab.Screen name="Shop" component={SellerProfil} ></Tab.Screen>
     </Tab.Navigator>
   )
 }
