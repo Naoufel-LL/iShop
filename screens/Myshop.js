@@ -83,7 +83,6 @@ const Myshop = ({navigation,route}) => {
     <View>
       <ScrollView>
       <TouchableOpacity  onPress={addProduct}>
-        <Image style={{ width: 190, height: 200, borderRadius:20 }} resizeMode="contain" source={require('../assets/Addproduct.png')} />
         <View style={{ backgroundColor: Colors.main, padding: 10, marginRight:200,borderRadius:20, }}>
         <Text style={{fontSize: 20, marginLeft:35,color:'white'  }}>Add a product</Text>
         </View>

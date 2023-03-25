@@ -1,8 +1,11 @@
-import { View, Text,Image,StyleSheet } from 'react-native'
-import React from 'react'
+import { View, Text,Image,StyleSheet, Modal,TextInput,KeyboardAvoidingView } from 'react-native'
+import React, { useState } from 'react'
 import Colors from '../constans/Colors'
 import moment from 'moment';
-import { Ionicons } from "@expo/vector-icons";
+import {Picker} from '@react-native-picker/picker'
+import {auth,db,storage} from "../firebase"
+import { collection, addDoc } from "firebase/firestore"; 
+import { Ionicons,FontAwesome } from "@expo/vector-icons";
 import {
     useFonts,
     Poppins_100Thin,
@@ -26,6 +29,7 @@ import {
   } from '@expo-google-fonts/poppins';
 import { ScrollView } from 'react-native';
 import { TouchableOpacity } from 'react-native';
+import { Alert } from 'react-native';
 const ProduitPage = ({navigation,route}) => {
     let [fontsLoaded] = useFonts({
         Poppins_100Thin,
@@ -52,7 +56,40 @@ const data = route.params.data
 navigation.setOptions({ title: data.product_title})
 console.log(data)
 const dateTimeAgo = moment(new Date(data.product_time)).fromNow();
+const [modal,setModal]=useState(false)
+const [reason,setReason] = useState("")
+const [comment,setComment]=useState("")
+const [focused,setFocused]=useState(false)
 
+const reports = [
+     "Description inexacte",
+     "Promotion d'une entreprise",
+     "Aucune intention de vendre",
+     "Vente d'armes ou de drogues",
+     "Contenu sexuel ou produit pour adultes",
+     "Discrimination",
+     "Contenu dangereux",
+     "Arnaque"
+] 
+  const sendReport = (id,image,title) =>{
+    const docRef = addDoc(collection(db, "reports"), {
+      user_id:auth.currentUser.uid,
+      user_name : auth.currentUser.displayName,
+      user_pic : auth.currentUser.photoURL,
+      report_time:Date.now(),
+      report_reason:reason,
+      report_comment:comment,
+      product_id:id,
+      product_img:image,
+      product_title:title
+  });
+  console.log("Document written with ID: ", docRef.id);
+  console.log("Report Sent")
+  Alert.alert("Votre Signal a été envoyé en success !!")
+  setModal(false)
+  setComment("")
+  }
+  
  if(fontsLoaded){
     return (
         <ScrollView>
@@ -62,7 +99,97 @@ const dateTimeAgo = moment(new Date(data.product_time)).fromNow();
           style={styles.image}
         />
         <View style={styles.detailsContainer}>
-          <Text style={styles.title}>{data.product_title}</Text>
+           <View style={{flexDirection:'row',justifyContent:"space-between",alignItems:"center"}}>
+           <Text style={styles.title}>{data.product_title}</Text>
+            {auth.currentUser.uid != data.owner_id ? <TouchableOpacity onPress={()=>setModal(true)}>
+           <Ionicons  name="alert-circle-outline" color="red" size={25} />
+            </TouchableOpacity> : null}
+           </View>
+           <Modal visible={modal} transparent={true} animationType="fade">
+             <KeyboardAvoidingView>
+             <View  style={{height:'100%',justifyContent:'center',alignItems:'center'}}>
+              <View style={{width:'90%',backgroundColor:Colors.back,height:500,alignItems:'center',justifyContent:'center',borderTopLeftRadius:10,borderTopRightRadius:10,position:'relative',opacity:1}}>
+              <TouchableOpacity onPress={()=>{setModal(false)}}  style={{position:'absolute',right:10,top:5}}> 
+                   <FontAwesome  name='close' size={25}></FontAwesome>
+                   </TouchableOpacity>
+                   <View style={{width:"80%",flexDirection:"row",justifyContent:'center',alignItems:"center"}}>
+      <View style={{flexDirection: 'row', alignItems: 'center' }}>
+      <Picker
+        placeholder='Raison'
+        selectedValue={reason}
+        onValueChange={(itemValue, itemIndex) =>
+          {setReason(itemValue);console.log(itemValue)}
+        }
+        style={{width: "100%",backgroundColor:Colors.main,marginVertical:15,borderRadius:10,padding:32,color:"#fff"}}
+      >
+        {reports.map(rep => (
+          <Picker.Item key={rep} label={rep} value={rep} />
+        ))}
+      </Picker>
+      </View>
+    </View>
+    <TextInput
+          required
+          maxLength={200}
+           onFocus={() => setFocused(true)}
+           onBlur={() => setFocused(false)}
+          value={comment}
+          onChangeText={(text)=>setComment(text)}
+           style={[
+            { fontFamily:"Poppins_400Regular",
+            fontSize:15,
+            height:150,
+            padding:20,
+            borderWidth: 1,
+            textAlignVertical: 'top',
+            borderColor: Colors.main,
+            backgroundColor: Colors.back,
+            borderRadius: 10,
+            marginVertical: 10,width:"80%"},
+            focused && {
+              borderWidth: 3,
+              borderColor: Colors.main,
+              shadowOffset: { width: 4, height: 10 },
+              shadowColor: Colors.main,
+              shadowOpacity: 0.2,
+              shadowRadius: 10,
+            },
+          ]}
+          multiline={true}
+          placeholder="Description">
+        </TextInput>
+        <TouchableOpacity
+          onPress={()=>{sendReport(data.product_id,data.product_img,data.product_title)}}
+          style={{
+            width:'50%',
+            padding: 5 * 2,
+            backgroundColor: Colors.main,
+            marginVertical: 5 * 3,
+            borderRadius: 10,
+            shadowColor: Colors.main,
+            shadowOffset: {
+              width: 0,
+              height: 10,
+            },
+            shadowOpacity: 0.3,
+            shadowRadius: 10,
+          }}
+        >
+          <Text
+            style={{
+              fontFamily: "Poppins_400Regular",
+              color:'#fff',
+              textAlign: "center",
+              fontSize: 19,
+            }}
+          >
+              Signaler
+          </Text>
+        </TouchableOpacity>
+              </View>
+            </View>
+             </KeyboardAvoidingView>
+           </Modal>
           <Text style={styles.price}>{data.product_price} DH</Text>
           <Text style={{fontFamily:'Poppins_600SemiBold',fontSize:20}}>
             Desciption
@@ -92,6 +219,7 @@ const dateTimeAgo = moment(new Date(data.product_time)).fromNow();
            <Text style={styles.text}><Ionicons name='time' /> Posted  {dateTimeAgo}</Text>
         </View>
         
+        {auth.currentUser.uid != data.owner_id ? 
         <View style={{justifyContent:'center',alignContent:'center',width:'100%',alignItems:'center'}}>
         <TouchableOpacity
           onPress={()=>navigation.navigate("CommanderPage",{data:data})}
@@ -132,7 +260,7 @@ const dateTimeAgo = moment(new Date(data.product_time)).fromNow();
            </TouchableOpacity>
         </View>
         <Text></Text>
-        </View>
+        </View> : null}
       </View>
         </ScrollView>
       )

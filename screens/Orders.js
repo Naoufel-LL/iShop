@@ -91,7 +91,7 @@ const Orders = ({navigation}) => {
       <ScrollView>
        <View style={{justifyContent:"center",alignItems:"center",width:"100%",}}>
           <Header />
-          <Text>Orders</Text> 
+          <Text style={{marginVertical:15}}>Mes Orders</Text> 
           {orders.map((data)=>{
               return(
                 <TouchableOpacity>

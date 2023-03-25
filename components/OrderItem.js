@@ -47,7 +47,7 @@ export default function OrderItem({data}) {
    if(fontsLoaded){
     return (
             <View style={{flexDirection:'row',padding:5,margin:10,width:"80%",backgroundColor:'#fff',borderRadius:10,shadowColor: "#000",shadowOffset: {width: 0,height: 2,},shadowOpacity: 0.25,shadowRadius: 3.84,elevation: 3,}}>
-                 <Image resizeMode='contain' style={{width:'40%',height:150}} source={{uri : data.product_img}}></Image>
+                 <Image resizeMode='contain' style={{width:'50%',height:150}} source={{uri : data.product_img}}></Image>
                  <View style={{padding:10,width:'70%'}}>
                  <Text style={{fontFamily:"Poppins_600SemiBold",fontSize:18}}>{data.product_title}</Text>
                  <Text style={{fontFamily:"Poppins_400Regular",fontSize:15}}>Vendeur  : {data.seller_name}</Text>

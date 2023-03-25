@@ -35,7 +35,7 @@ import {signInWithEmailAndPassword} from "firebase/auth"
 import * as ImagePicker from 'expo-image-picker';
 
 import {auth,db,storage} from "../firebase"
-import { collection, addDoc } from "firebase/firestore"; 
+import { collection, updateDoc,doc } from "firebase/firestore"; 
 import { Alert } from 'react-native';
 const Change_Info = ({navigation,route}) =>{
     let [fontsLoaded] = useFonts({
@@ -64,14 +64,9 @@ const Change_Info = ({navigation,route}) =>{
       const [focused3, setFocused3] = useState(false);
       const [thisUser,setThisUser] = useState([])
       const [uploading, setUploading] = useState(false)
-     /* const onChangeDate = (event, selectedDate) => {
-        setShowPicker(false);
-        if (selectedDate) {
-          setDate(selectedDate);
-          console.log(selectedDate.toLocaleDateString())
-          setDateText(selectedDate.toLocaleDateString())
-        }
-      };
+      const [image,setImage]=useState("")
+      const [imageUrl,setImageUrl] = useState("")
+     const [docId,setDocId] = useState("")
       function validerTel(telephone) {
         var pattern = /^0[67][0-9]{8}$/;
       
@@ -82,6 +77,7 @@ const Change_Info = ({navigation,route}) =>{
       
         return true;
       }
+
       const uploadImage = async (imagepic) => {
         const Imageblob = await new Promise((resolve, reject) => {
           const xhr = new XMLHttpRequest();
@@ -146,80 +142,22 @@ uploadTask.on('state_changed',
   }
 );
       }
-const cities = [
-  'Select City',
-  'Agadir',
-  'Ait Melloul',
-  'Al Hoceima',
-  'Azemmour',
-  'Azrou',
-  'Beni Mellal',
-  'Benslimane',
-  'Berkane',
-  'Berrechid',
-  'Bouskoura',
-  'Casablanca',
-  'Chefchaouen',
-  'Dakhla',
-  'El Jadida',
-  'Errachidia',
-  'Essaouira',
-  'Fès',
-  'Fnideq',
-  'Guelmim',
-  'Ifrane',
-  'Kénitra',
-  'Khemisset',
-  'Khouribga',
-  'Ksar El Kebir',
-  'Laâyoune',
-  'Larache',
-  'Marrakech',
-  'Meknès',
-  'Midelt',
-  'Mohammédia',
-  'Nador',
-  'Ouarzazate',
-  'Oued Zem',
-  'Oujda',
-  'Rabat',
-  'Safi',
-  'Sale',
-  'Sefrou',
-  'Settat',
-  'Sidi Bennour',
-  'Sidi Ifni',
-  'Sidi Kacem',
-  'Sidi Slimane',
-  'Skhirat',
-  'Souk El Arbaa',
-  'Tanger',
-  'Tan-Tan',
-  'Taounate',
-  'Taourirt',
-  'Taroudant',
-  'Taza',
-  'Témara',
-  'Tétouan',
-  'Tiflet',
-  'Tinghir',
-  'Tiznit',
-  'Youssoufia',
-];
-*/
-console.log(auth.currentUser.email)
+
+
 useLayoutEffect(()=>{
   const q = query(collection(db, "users"),where("email", "==",auth.currentUser.email))
   const unsubscribe = onSnapshot(q, (querySnapshot) => {
 querySnapshot.forEach((doc) => {
   console.log(doc.data())
+  setDocId(doc.id)
   setThisUser(doc.data())
+  setImageUrl(doc.data().profilPic)
 });
 console.log(thisUser)
 });
 },[])
 
-/*const pickImage = async () => {
+const pickImage = async () => {
   // No permissions request is necessary for launching the image library
   let result = await ImagePicker.launchImageLibraryAsync({
     mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -235,19 +173,41 @@ console.log(thisUser)
     console.log(image)
     uploadImage(result.assets[0].uri)
   }
-};*/
+};
+const saveProfile = ()  => {
+  console.log(docId)
+  const UserRef = doc(db, "users", docId);
+  updateDoc(UserRef, {
+      firstName : thisUser.firstName,
+      lastName : thisUser.lastName,
+      phone : thisUser.phone,
+      adress: thisUser.adress,
+      profilPic:imageUrl
+  });
+  updateProfile(auth.currentUser, {
+    displayName: thisUser.firstName + ' ' + thisUser.lastName, photoURL: imageUrl,phoneNumber : thisUser.phone
+  }).then(() => {
+    console.log("updated",phone)
+      // ...
+  }).catch((error) => {
+    // An error occurred
+    // ...
+  });
+  Alert.alert("Vos données ont éte bien enregistré !")
+  navigation.replace("home")
+}
 if(fontsLoaded){
  return(
     <SafeAreaView style={{paddingTop:'10%',justifyContent:'center',alignContent:'center',width:"100%",alignItems:"center"}}>
     <ScrollView style={{width:"100%"}}>
         <Text style={{fontFamily:"Poppins_700Bold",fontSize:25,color:Colors.main,textAlign: 'center'}}>
-         Register Here
+         Update Profile
        </Text>
        <Text style={{fontFamily:"Poppins_600SemiBold",fontSize:15,paddingVertical:10,textAlign:'center',width:'100%'}}>
-         Fill the form to register
+         Fill the form to update
        </Text>
        <View style={{width:'100%',justifyContent:"center",alignItems:'center',paddingVertical:20}}>
-       {thisUser.profilPic && <Image source={{ uri: thisUser.profilPic }} style={{ width: 100, height: 100 }}></Image>}
+       {thisUser.profilPic && <Image source={{ uri: imageUrl}} style={{ width: 100, height: 100 }}></Image>}
          <TouchableOpacity onPress={()=>{pickImage()}}>
           <View style={{padding:10,backgroundColor:Colors.main,marginVertical:10,borderRadius:5}}>
           <Text style={{fontFamily:"Poppins_400Regular",color:'#fff'}}>Upload Your Image</Text>
@@ -256,6 +216,7 @@ if(fontsLoaded){
          <TextInput
         required
         value={thisUser.firstName}
+        onChangeText={(txt) => setThisUser({...thisUser, firstName: txt})}
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
         style={[
@@ -280,6 +241,7 @@ if(fontsLoaded){
            onFocus={() => setFocused1(true)}
            onBlur={() => setFocused1(false)}
           value={thisUser.lastName}
+          onChangeText={(txt) => setThisUser({...thisUser, lastName: txt})}
            style={[
             { fontFamily:"Poppins_400Regular",
             fontSize:15,
@@ -303,6 +265,7 @@ if(fontsLoaded){
            onFocus={() => setFocused2(true)}
            onBlur={() => {setFocused2(false);validerTel(phone)}}
           value={thisUser.phone}
+        onChangeText={(txt) => setThisUser({...thisUser, phone: txt})}
            style={[
             { fontFamily:"Poppins_400Regular",
             fontSize:15,
@@ -327,6 +290,7 @@ if(fontsLoaded){
            onFocus={() => setFocused3(true)}
            onBlur={() => setFocused3(false)}
           value={thisUser.adress}
+          onChangeText={(txt) => {setThisUser({...thisUser, adress: txt});console.log(thisUser)}}
            style={[
             { fontFamily:"Poppins_400Regular",
             fontSize:15,
@@ -346,7 +310,7 @@ if(fontsLoaded){
           placeholder="Enter Your Adresse">
         </TextInput>
       <TouchableOpacity
-          onPress={()=>{}}
+         onPress = {()=>saveProfile()}
           style={{
             width:'70%',
             padding: 10 * 2,
@@ -370,7 +334,7 @@ if(fontsLoaded){
               fontSize: 19,
             }}
           >
-             Continue
+             Save
           </Text>
         </TouchableOpacity>
       

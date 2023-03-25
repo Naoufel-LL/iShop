@@ -82,6 +82,25 @@ const ITEM_PRICE = data.product_price;
     Alert.alert(`Vous avez saisi ${q} ,la quantité doit etre supérieur à 0 et inférieur à ${data.product_stock}`);      
        return false; 
 }
+const handleCommander = () => {
+  Alert.alert(
+    'Commander Ce Produit',
+    `Tu es sur ? Total est ${totalPrice}Dh pour ${quantity} ${data.product_title}
+    `,
+    [
+      {
+        text: 'Annuler',
+        onPress: () => console.log('Cancel Pressed!'),
+        style: 'cancel',
+      },
+      {
+        text: 'Confirmer',
+        onPress: () => Commander(),
+      },
+    ],
+    {cancelable: false},
+  );
+};
 const Commander = () =>{
      if(validerTel(phone) && maxQuantity(quantity) && adress != '' && codepostal != 0){
       const docRef = addDoc(collection(db, "commandes"), {
@@ -118,8 +137,8 @@ const Commander = () =>{
          Commander
        </Text>
        <View style={{alignItems:'center',justifyContent:'center',width:'90%',height:200,flexDirection:"row",backgroundColor:'#fff',borderRadius:10,shadowColor: "#000",shadowOffset: {width: 0,height: 2,},shadowOpacity: 0.25,shadowRadius: 3.84,elevation: 3}}>
-         <Image resizeMode='contain' source={{uri: data.product_img}}  style={{width:"50%",height:"100%"}}  />
-         <View style={{padding:10}}>
+         <Image resizeMode='contain' source={{uri: data.product_img}}  style={{width:"40%",height:"100%"}}  />
+         <View style={{padding:10,width:'40%'}}>
           <Text  style={{fontFamily:"Poppins_700Bold"}}>{data.product_title}</Text>
           <Text style={{fontFamily:"Poppins_400Regular"}}>{data.product_desc}</Text>
           <Text style={{fontFamily:"Poppins_400Regular"}}>Stock : {data.product_stock}</Text>
@@ -232,7 +251,7 @@ const Commander = () =>{
             <Text></Text>
             <Text style={{fontFamily:"Poppins_700Bold"}}>Total à Payer : {totalPrice} DH</Text>
              <TouchableOpacity
-          onPress={()=>{Commander()}}
+          onPress={()=>{handleCommander()}}
           style={{
             width:'70%',
             padding: 10 * 2,
