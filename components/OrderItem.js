@@ -23,6 +23,7 @@ import {
   } from '@expo-google-fonts/poppins';
 import Colors from '../constans/Colors';
 import { Ionicons } from "@expo/vector-icons";
+import {auth} from '../firebase'
 export default function OrderItem({data}) {
     let [fontsLoaded] = useFonts({
         Poppins_100Thin,
@@ -50,10 +51,11 @@ export default function OrderItem({data}) {
                  <Image resizeMode='contain' style={{width:'50%',height:150}} source={{uri : data.product_img}}></Image>
                  <View style={{padding:10,width:'70%'}}>
                  <Text style={{fontFamily:"Poppins_600SemiBold",fontSize:18}}>{data.product_title}</Text>
-                 <Text style={{fontFamily:"Poppins_400Regular",fontSize:15}}>Vendeur  : {data.seller_name}</Text>
+                 {auth.currentUser.uid != data.seller_id  ? <Text style={{fontFamily:"Poppins_400Regular",fontSize:15}}>Vendeur  : {data.seller_name}</Text>
+            : <Text style={{fontFamily:"Poppins_400Regular",fontSize:15}}>Client  : {data.buyer_name}</Text>}
                  <Text style={{fontFamily:"Poppins_400Regular",fontSize:15}}>Quantité  : x{data.quantity}</Text>
                  <Text style={{fontFamily:"Poppins_400Regular",fontSize:15}}>Total  : {data.total}DH</Text>
-                 {data.statut ? <Text style={{fontFamily:"Poppins_400Regular",fontSize:15,color:'green'}}>Statut : Livred <Ionicons name="md-checkmark" size={15} ></Ionicons></Text> : <Text style={{fontFamily:"Poppins_400Regular",fontSize:15,color:'red'}}>Statut : Non Livré <Ionicons name="alert-circle" size={15} ></Ionicons></Text>}
+                 {data.status ? <Text style={{fontFamily:"Poppins_400Regular",fontSize:15,color:'green'}}>Statut : Livred <Ionicons name="md-checkmark" size={15} ></Ionicons></Text> : <Text style={{fontFamily:"Poppins_400Regular",fontSize:15,color:'red'}}>Statut : Non Livré <Ionicons name="alert-circle" size={15} ></Ionicons></Text>}
                  </View>
              </View>
       )

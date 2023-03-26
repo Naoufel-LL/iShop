@@ -1,7 +1,6 @@
 import { View, Text,TouchableOpacity,ScrollView,ActivityIndicator,Image, Alert} from 'react-native'
 import React from 'react'
 import { useState,useEffect,useLayoutEffect} from 'react';
-import {auth,db} from '../firebase'
 import Colors from '../constans/Colors'
 
 import {
@@ -26,6 +25,8 @@ import {
     Poppins_900Black_Italic,
   } from '@expo-google-fonts/poppins';
 import ItemCard from '../components/ItemCard';
+import {auth,db,storage} from "../firebase"
+import {updateDoc,doc } from "firebase/firestore"; 
 import { collection, query, where, onSnapshot ,orderBy } from "firebase/firestore";
 import OrderItem from '../components/OrderItem';
 import Header from './Header'
@@ -54,9 +55,10 @@ const Orders = ({navigation}) => {
     quantity,
     buy_time,
     total,
-    statut
+    status
   } = doc.data();
   list.push({
+    document_id:doc.id,
     product_id:product_id,
     product_img:product_img,
     product_title:product_title,
@@ -72,7 +74,7 @@ const Orders = ({navigation}) => {
     quantity:quantity,
     buy_time:buy_time,
     total:total,
-    statut:statut,
+    status:status,
   });
  });
  setOrders(list)
@@ -81,6 +83,8 @@ const Orders = ({navigation}) => {
   },[])
   console.log(orders)
   navigation.setOptions({ tabBarBadge: orders.length})
+  
+ 
   return (
     <ScrollView>
       {!loading ? 

@@ -4,6 +4,7 @@ import Colors from '../constans/Colors'
 import moment from 'moment';
 import {Picker} from '@react-native-picker/picker'
 import {auth,db,storage} from "../firebase"
+import { doc, deleteDoc } from "firebase/firestore";
 import { collection, addDoc } from "firebase/firestore"; 
 import { Ionicons,FontAwesome } from "@expo/vector-icons";
 import {
@@ -89,7 +90,32 @@ const reports = [
   setModal(false)
   setComment("")
   }
-  
+  const deletePoduct = (id) =>{
+    deleteDoc(doc(db, "produits", id));
+    Alert.alert("Le produit a été supprimé !")
+    navigation.replace("Myshop")
+   }
+
+ const handleDeleteProduct = (id) =>{
+    Alert.alert(
+      'Supprimer Produit',
+     `Voulez-vous supprimer ce produit ?
+     `,
+       [
+         {
+           text: 'Annuler',
+           onPress: () => console.log('Cancel Pressed!'),
+           style: 'cancel',
+         },
+         {
+           text: 'Confirmer',
+           onPress: () => deletePoduct(id),
+         },
+       ],
+       {cancelable: false},
+     );
+   
+ };
  if(fontsLoaded){
     return (
         <ScrollView>
@@ -103,12 +129,14 @@ const reports = [
            <Text style={styles.title}>{data.product_title}</Text>
             {auth.currentUser.uid != data.owner_id ? <TouchableOpacity onPress={()=>setModal(true)}>
            <Ionicons  name="alert-circle-outline" color="red" size={25} />
-            </TouchableOpacity> : null}
+            </TouchableOpacity> : <TouchableOpacity onPress={()=>handleDeleteProduct(data.document_id)}>
+           <Ionicons  name="trash-bin" color="red" size={25} />
+            </TouchableOpacity>}
            </View>
            <Modal visible={modal} transparent={true} animationType="fade">
              <KeyboardAvoidingView>
              <View  style={{height:'100%',justifyContent:'center',alignItems:'center'}}>
-              <View style={{width:'90%',backgroundColor:Colors.back,height:500,alignItems:'center',justifyContent:'center',borderTopLeftRadius:10,borderTopRightRadius:10,position:'relative',opacity:1}}>
+              <View style={{width:'90%',backgroundColor:Colors.back,height:400,alignItems:'center',justifyContent:'center',borderTopLeftRadius:10,borderTopRightRadius:10,position:'relative',opacity:1}}>
               <TouchableOpacity onPress={()=>{setModal(false)}}  style={{position:'absolute',right:10,top:5}}> 
                    <FontAwesome  name='close' size={25}></FontAwesome>
                    </TouchableOpacity>
@@ -156,7 +184,7 @@ const reports = [
             },
           ]}
           multiline={true}
-          placeholder="Description">
+          placeholder="Commentaire">
         </TextInput>
         <TouchableOpacity
           onPress={()=>{sendReport(data.product_id,data.product_img,data.product_title)}}

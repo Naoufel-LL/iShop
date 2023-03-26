@@ -20,6 +20,7 @@ import Support from './screens/Support';
 import Change_Password from './screens/Change_Password';
 import Myshop from './screens/Myshop'
 import CommanderPage from './screens/CommanderPage';
+import Commandes from './screens/Commandes';
 const Stack = createNativeStackNavigator();
 
 function App() {
@@ -52,6 +53,7 @@ function App() {
       <Stack.Screen name="Change_Info" component={Change_Info}  options={{headerShown:false}} />
       <Stack.Screen name="Change_Password" component={Change_Password}  options={{headerShown:false}} />
       <Stack.Screen name="Support" component={Support}  options={{headerShown:false}} />
+      <Stack.Screen name="Commandes" component={Tabs2}  options={{headerShown:false}} />
       </Stack.Navigator>
     </NavigationContainer>
 

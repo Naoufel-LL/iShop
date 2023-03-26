@@ -24,7 +24,7 @@ import {
 } from '@expo-google-fonts/poppins';
 import Colors from '../constans/Colors';
 import { Ionicons } from "@expo/vector-icons";
-import {signInWithEmailAndPassword } from "firebase/auth";
+import {signInWithEmailAndPassword, sendPasswordResetEmail } from "firebase/auth";
 import {auth,db} from "../firebase"
 const Login = ({navigation}) => {
   let [fontsLoaded] = useFonts({
@@ -49,8 +49,20 @@ const Login = ({navigation}) => {
   });
   const [focused, setFocused] = useState(false);
   const [focused1, setFocused1] = useState(false);
-  const [email, setEmail] = useState('')
+  const [email, setEmail] = useState()
   const [password, setPassword] = useState('')
+
+  const resetPassword = () => {
+    if(email != null){
+      sendPasswordResetEmail(auth, email)
+      alert("un mail de modification de mot de passe vous a été envoyer sur votre mail!")
+
+    }else{
+
+      alert("entrer un email valid s'il vous plait!")
+
+    }
+  }
 
   const handleLogin = () => {
     signInWithEmailAndPassword(auth,email, password)
@@ -67,10 +79,10 @@ const Login = ({navigation}) => {
     return (
       <SafeAreaView style={{paddingTop:'30%',justifyContent:'center',alignContent:'center',width:"100%",alignItems:"center"}}>
        <Text style={{fontFamily:"Poppins_700Bold",fontSize:25,color:Colors.main}}>
-         Login Here
+         Se connecter Ici
        </Text>
        <Text style={{fontFamily:"Poppins_600SemiBold",fontSize:20,paddingVertical:10,textAlign:'center',width:'80%'}}>
-         Welcome back you've been missed !
+         Bienvenue encore vous avez été manqué !
        </Text>
 
        <View style={{width:'100%',justifyContent:"center",alignItems:'center',paddingVertical:20}}>
@@ -94,7 +106,7 @@ const Login = ({navigation}) => {
             shadowOpacity: 0.2,
             shadowRadius: 10,
           },
-        ]} placeholder="Enter Email">
+        ]} placeholder="Entrer Email">
           </TextInput>
           <TextInput
           value={password}
@@ -118,7 +130,7 @@ const Login = ({navigation}) => {
             },
           ]}
           secureTextEntry={true}
-          placeholder="Enter Password">
+          placeholder="Entrer Mot de passe">
           </TextInput>
           <TouchableOpacity
           onPress={()=>handleLogin()}
@@ -150,7 +162,7 @@ const Login = ({navigation}) => {
         </TouchableOpacity>
        <TouchableOpacity onPress={()=>navigation.replace("register")}>
        <Text style={{fontFamily:"Poppins_500Medium",fontSize:15,paddingVertical:10,textAlign:'center',width:'80%'}}>
-           Create new account
+           Créer un nouveau compte
          </Text>
        </TouchableOpacity>
        <View
@@ -158,6 +170,9 @@ const Login = ({navigation}) => {
             marginVertical: 10 * 3,
           }}
         >
+          <TouchableOpacity
+          onPress={resetPassword}
+          >
           <Text
             style={{
               fontFamily: "Poppins_500Medium",
@@ -166,44 +181,11 @@ const Login = ({navigation}) => {
               fontSize: 15,
             }}
           >
-            Or continue with
+            Mot de Passe oublié ?
           </Text>
+          </TouchableOpacity>
 
-          <View
-            style={{
-              marginTop: 10,
-              flexDirection: "row",
-              justifyContent: "center",
-            }}
-          >
-            <TouchableOpacity
-              style={{
-                padding: 10,
-                borderRadius: 10 / 2,
-                marginHorizontal: 10,
-                backgroundColor:Colors.back
-
-              }}
-            >
-              <Ionicons
-                name="logo-google"
-                size={10 * 2}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{
-                padding: 10,
-                borderRadius: 10 / 2,
-                marginHorizontal: 10,
-                backgroundColor:Colors.back
-              }}
-            >
-              <Ionicons
-                name="logo-facebook"
-                size={10 * 2}
-              />
-            </TouchableOpacity>
-          </View>
+  
         </View>
        </View>
       </SafeAreaView>

@@ -69,7 +69,7 @@ const Register2 = ({navigation,route}) =>{
       const [showPicker, setShowPicker] = useState(false);
       const [image, setImage] = useState("https://mui.com/static/images/avatar/1.jpg");
       const [imageUrl, setImageUrl] = useState("https://mui.com/static/images/avatar/1.jpg");
-      const [dateText,setDateText] = useState("Select Your Birthday")
+      const [dateText,setDateText] = useState("Date de Naissance")
       const [uploading, setUploading] = useState(false)
       const onChangeDate = (event, selectedDate) => {
         setShowPicker(false);
@@ -276,16 +276,16 @@ if(fontsLoaded){
     <SafeAreaView style={{paddingTop:'10%',justifyContent:'center',alignContent:'center',width:"100%",alignItems:"center"}}>
       <ScrollView style={{width:"100%"}}>
         <Text style={{fontFamily:"Poppins_700Bold",fontSize:25,color:Colors.main,textAlign: 'center'}}>
-         Register Here
+        Enregistrer vous ici!
        </Text>
        <Text style={{fontFamily:"Poppins_600SemiBold",fontSize:15,paddingVertical:10,textAlign:'center',width:'100%'}}>
-         Fill the form to register
+         Remplissez le formulaire pour s'enregistrer
        </Text>
        <View style={{width:'100%',justifyContent:"center",alignItems:'center',paddingVertical:20}}>
        {image && <Image source={{ uri: image }} style={{ width: 100, height: 100 }}></Image>}
          <TouchableOpacity onPress={()=>{pickImage()}}>
           <View style={{padding:10,backgroundColor:Colors.main,marginVertical:10,borderRadius:5}}>
-          <Text style={{fontFamily:"Poppins_400Regular",color:'#fff'}}>Upload Your Image</Text>
+          <Text style={{fontFamily:"Poppins_400Regular",color:'#fff'}}>Uploader votre Image</Text>
           </View>
          </TouchableOpacity>
          <TextInput
@@ -309,7 +309,7 @@ if(fontsLoaded){
             shadowOpacity: 0.2,
             shadowRadius: 10,
           },
-        ]} placeholder="Enter Your FirstName">
+        ]} placeholder="Entrer votre Prenom">
           </TextInput>
           <TextInput
           required
@@ -333,7 +333,7 @@ if(fontsLoaded){
               shadowRadius: 10,
             },
           ]}
-          placeholder="Enter Your LastName">
+          placeholder="Entrer votre Nom">
           </TextInput>
           <TextInput
           required
@@ -358,7 +358,7 @@ if(fontsLoaded){
             },
           ]}
           keyboardType='numeric'
-          placeholder="Enter Your Phone Number">
+          placeholder="Entrer votre GSM">
           </TextInput>
           <TextInput
           required
@@ -382,13 +382,13 @@ if(fontsLoaded){
               shadowRadius: 10,
             },
           ]}
-          placeholder="Enter Your Adresse">
+          placeholder="Entrer votre Adresse">
         </TextInput>
       
     <View style={{width:"80%",flexDirection:"row",justifyContent:'center',alignItems:"center"}}>
       <View style={{flexDirection: 'row', alignItems: 'center' }}>
       <Picker
-        placeholder='Select City'
+        placeholder='Selecter une ville'
         selectedValue={selectedCity}
         onValueChange={(itemValue, itemIndex) =>
           {setSelectedCity(itemValue);console.log(itemValue)}
@@ -437,7 +437,7 @@ if(fontsLoaded){
               fontSize: 19,
             }}
           >
-             Continue
+             Continuer
           </Text>
         </TouchableOpacity>
       

@@ -33,7 +33,26 @@ import {auth,db} from "../firebase"
 const Change_Password = ({navigation}) => {
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
-
+  let [fontsLoaded] = useFonts({
+    Poppins_100Thin,
+    Poppins_100Thin_Italic,
+    Poppins_200ExtraLight,
+    Poppins_200ExtraLight_Italic,
+    Poppins_300Light,
+    Poppins_300Light_Italic,
+    Poppins_400Regular,
+    Poppins_400Regular_Italic,
+    Poppins_500Medium,
+    Poppins_500Medium_Italic,
+    Poppins_600SemiBold,
+    Poppins_600SemiBold_Italic,
+    Poppins_700Bold,
+    Poppins_700Bold_Italic,
+    Poppins_800ExtraBold,
+    Poppins_800ExtraBold_Italic,
+    Poppins_900Black,
+    Poppins_900Black_Italic,
+  });
   const handleChangePassword = () => {
 
     updatePassword(auth.currentUser, newPassword).then(() => {
@@ -47,26 +66,28 @@ const Change_Password = ({navigation}) => {
 
   };
 
-  return (
-    <View style={styles.container}>
-      <Text style={styles.heading}>Edit Account Password</Text>
-      <TextInput 
-        style={styles.input}
-        secureTextEntry
-        placeholder="Ancien mot de passe"
-        onChangeText={setOldPassword}
-      />
-      <TextInput
-       style={styles.input}
-        secureTextEntry
-        placeholder="Nouveau mot de passe"
-        onChangeText={setNewPassword}
-      />
-      <TouchableOpacity style={styles.button} onPress={handleChangePassword}>
-        <Text style={styles.buttonText}>Save Changes</Text>
-      </TouchableOpacity>
-    </View>
-    )
+  if(fontsLoaded){
+    return (
+      <View style={styles.container}>
+        <Text style={styles.heading}>Edit Account Password</Text>
+        <TextInput 
+          style={styles.input}
+          secureTextEntry
+          placeholder="Ancien mot de passe"
+          onChangeText={setOldPassword}
+        />
+        <TextInput
+         style={styles.input}
+          secureTextEntry
+          placeholder="Nouveau mot de passe"
+          onChangeText={setNewPassword}
+        />
+        <TouchableOpacity style={styles.button} onPress={handleChangePassword}>
+          <Text style={styles.buttonText}>Save Changes</Text>
+        </TouchableOpacity>
+      </View>
+      )
+  }
 }
 
 const styles = StyleSheet.create({
@@ -80,7 +101,7 @@ const styles = StyleSheet.create({
   },
   heading: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontFamily:"Poppins_500Medium",
     marginBottom: 20,
   },
   input: {
@@ -96,8 +117,8 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   buttonText: {
+    fontFamily:"Poppins_500Medium",
     color: 'white',
-    fontWeight: 'bold',
     textAlign: 'center',
   },
 });

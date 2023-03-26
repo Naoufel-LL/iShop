@@ -70,10 +70,10 @@ const Register = ({navigation}) => {
     return (
       <SafeAreaView style={{paddingTop:'30%',justifyContent:'center',alignContent:'center',width:"100%",alignItems:"center"}}>
        <Text style={{fontFamily:"Poppins_700Bold",fontSize:25,color:Colors.main}}>
-         Register Here
+         Enregistrer vous ici!
        </Text>
        <Text style={{fontFamily:"Poppins_600SemiBold",fontSize:15,paddingVertical:10,textAlign:'center',width:'80%'}}>
-       Create an account so you can explore all the existing jobs
+       Creer un compte pour pouvoir découvrir tous les produits et fonctionalités
        </Text>
 
        <View style={{width:'100%',justifyContent:"center",alignItems:'center',paddingVertical:20}}>
@@ -97,7 +97,7 @@ const Register = ({navigation}) => {
             shadowOpacity: 0.2,
             shadowRadius: 10,
           },
-        ]} placeholder="Enter Email">
+        ]} placeholder="Entrer Email">
           </TextInput>
           <TextInput
           value={password}
@@ -121,7 +121,7 @@ const Register = ({navigation}) => {
             },
           ]}
           secureTextEntry={true}
-          placeholder="Enter Password">
+          placeholder="Entrer Password">
           </TextInput>
           <TouchableOpacity
           onPress={()=>handleSignUp()}
@@ -153,7 +153,7 @@ const Register = ({navigation}) => {
         </TouchableOpacity>
        <TouchableOpacity onPress={()=>navigation.replace("login")}>
        <Text style={{fontFamily:"Poppins_500Medium",fontSize:15,paddingVertical:10,textAlign:'center',width:'80%'}}>
-       Already have an account
+       J'ai déja un compte
          </Text>
        </TouchableOpacity>
        <View
@@ -161,16 +161,6 @@ const Register = ({navigation}) => {
             marginVertical: 10 * 3,
           }}
         >
-          <Text
-            style={{
-              fontFamily: "Poppins_500Medium",
-              color: Colors.main,
-              textAlign: "center",
-              fontSize: 15,
-            }}
-          >
-            Or continue with
-          </Text>
 
           <View
             style={{
@@ -179,33 +169,7 @@ const Register = ({navigation}) => {
               justifyContent: "center",
             }}
           >
-            <TouchableOpacity
-              style={{
-                padding: 10,
-                borderRadius: 10 / 2,
-                marginHorizontal: 10,
-                backgroundColor:Colors.back
-
-              }}
-            >
-              <Ionicons
-                name="logo-google"
-                size={10 * 2}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{
-                padding: 10,
-                borderRadius: 10 / 2,
-                marginHorizontal: 10,
-                backgroundColor:Colors.back
-              }}
-            >
-              <Ionicons
-                name="logo-facebook"
-                size={10 * 2}
-              />
-            </TouchableOpacity>
+             
           </View>
         </View>
        </View>

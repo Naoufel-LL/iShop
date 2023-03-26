@@ -27,6 +27,7 @@ import {
   } from '@expo-google-fonts/poppins';
 import ItemCard from '../components/ItemCard';
 import { collection, query, where, onSnapshot ,orderBy } from "firebase/firestore";
+import { Ionicons } from '@expo/vector-icons';
 
 const Myshop = ({navigation,route}) => {
   
@@ -57,6 +58,7 @@ const Myshop = ({navigation,route}) => {
     product_condition,
   } = doc.data();
   list.push({
+    document_id:doc.id,
     owner_id:owner_id,
     owner_name:owner_name,
     product_time:product_time,
@@ -82,11 +84,17 @@ const Myshop = ({navigation,route}) => {
   return (
     <View>
       <ScrollView>
+      <View>
       <TouchableOpacity  onPress={addProduct}>
-        <View style={{ backgroundColor: Colors.main, padding: 10, marginRight:200,borderRadius:20, }}>
-        <Text style={{fontSize: 20, marginLeft:35,color:'white'  }}>Add a product</Text>
+       <View style={{width:'100%',justifyContent:'center',alignItems:"center",marginVertical:20}}>
+       <View style={{ backgroundColor: Colors.main, padding: 10,width:50,borderRadius:50,justifyContent:'center',alignItems:"center"}}>
+         <Ionicons name="add-circle-outline" size={30} color="#fff"/>
         </View>
+        <Text>Ajouter</Text>
+
+       </View>
       </TouchableOpacity>
+      </View>
 
       {!loading ? 
        <View>
@@ -97,7 +105,7 @@ const Myshop = ({navigation,route}) => {
        <View style={{justifyContent:"center",alignItems:"center",width:"100%",flexDirection:"row",flexWrap:"wrap",}}>
          {products.map((data)=>{
              return(
-              <TouchableOpacity onLongPress={()=>Alert.alert("Long")} style={{width:"50%"}} onPress={()=>navigation.navigate("ProduitPage",{data:data})}>
+              <TouchableOpacity  style={{width:"50%"}} onPress={()=>navigation.navigate("ProduitPage",{data:data})}>
                 <ItemCard key={data.owner_id} data={data} />
               </TouchableOpacity>
              )

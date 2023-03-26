@@ -1,7 +1,6 @@
 import { View, Text,TouchableOpacity,ScrollView,ActivityIndicator,Image, Alert} from 'react-native'
 import React from 'react'
 import { useState,useEffect,useLayoutEffect} from 'react';
-import {auth,db} from '../firebase'
 import Colors from '../constans/Colors'
 
 import {
@@ -26,6 +25,8 @@ import {
     Poppins_900Black_Italic,
   } from '@expo-google-fonts/poppins';
 import ItemCard from '../components/ItemCard';
+import {auth,db,storage} from "../firebase"
+import {updateDoc,doc } from "firebase/firestore"; 
 import { collection, query, where, onSnapshot ,orderBy } from "firebase/firestore";
 import OrderItem from '../components/OrderItem';
 
@@ -54,9 +55,10 @@ const Commandes = ({navigation}) => {
     quantity,
     buy_time,
     total,
-    statut
+    status
   } = doc.data();
   list.push({
+    document_id:doc.id,
     product_id:product_id,
     product_img:product_img,
     product_title:product_title,
@@ -72,14 +74,47 @@ const Commandes = ({navigation}) => {
     quantity:quantity,
     buy_time:buy_time,
     total:total,
-    statut:statut,
+    status:status,
   });
+  console.log(status)
  });
  setCommandes(list)
  setLoading(true)
 });
-  },[])
+  },[loading])
   navigation.setOptions({ tabBarBadge: commandes.length})
+  const LivredOrder = (id) =>{
+    const commandeRef = doc(db, "commandes", id);
+    updateDoc(commandeRef, {
+        status:true
+    });
+    Alert.alert("Livred !")
+    navigation.replace("Commandes")
+   }
+
+ const handleLivredOrder = (id,status) =>{
+   if(status){  
+     Alert.alert("La commande est déja livrée")
+   }else{
+    Alert.alert(
+      'Commande Status',
+     `La commande a été bien livré ?
+     `,
+       [
+         {
+           text: 'Annuler',
+           onPress: () => console.log('Cancel Pressed!'),
+           style: 'cancel',
+         },
+         {
+           text: 'Confirmer',
+           onPress: () => LivredOrder(id),
+         },
+       ],
+       {cancelable: false},
+     );
+   }
+ };
   return (
     <ScrollView>
       {!loading ? 
@@ -90,9 +125,10 @@ const Commandes = ({navigation}) => {
       <ScrollView>
        <View style={{justifyContent:"center",alignItems:"center",width:"100%",}}>
           <Text>Commandes</Text> 
+          {commandes.length == 0 ? <Text>Pas de commandes pour le momment</Text> : null}
           {commandes.map((data)=>{
               return(
-                <TouchableOpacity>
+                <TouchableOpacity onLongPress={()=>handleLivredOrder(data.document_id,data.status)}>
                 <OrderItem data={data}/>
                 </TouchableOpacity>
               )
