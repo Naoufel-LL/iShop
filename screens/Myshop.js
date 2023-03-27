@@ -28,6 +28,7 @@ import {
 import ItemCard from '../components/ItemCard';
 import { collection, query, where, onSnapshot ,orderBy } from "firebase/firestore";
 import { Ionicons } from '@expo/vector-icons';
+import Header from './Header';
 
 const Myshop = ({navigation,route}) => {
   
@@ -84,6 +85,7 @@ const Myshop = ({navigation,route}) => {
   return (
     <View>
       <ScrollView>
+        <Header></Header>
       <View>
       <TouchableOpacity  onPress={addProduct}>
        <View style={{width:'100%',justifyContent:'center',alignItems:"center",marginVertical:20}}>

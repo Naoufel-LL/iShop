@@ -47,7 +47,7 @@ export default function ItemCard({data}) {
    if(fontsLoaded){
     return (
             <View style={{padding:5,margin:10,width:"90%",backgroundColor:'#fff',borderRadius:10,shadowColor: "#000",shadowOffset: {width: 0,height: 2,},shadowOpacity: 0.25,shadowRadius: 3.84,elevation: 3,}}>
-                 <Image resizeMode='cover' style={{width:'100%',height:200}} source={{uri : data.product_img}}></Image>
+                 <Image resizeMode='cover' style={{width:'100%',height:180}} source={{uri : data.product_img}}></Image>
                  <View style={{padding:10}}>
                  <Text style={{fontFamily:"Poppins_600SemiBold",fontSize:18}}>{data.product_price} DH</Text>
                     <Text style={{fontFamily:"Poppins_400Regular",fontSize:15}}>{data.product_title}</Text>

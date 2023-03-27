@@ -60,14 +60,19 @@ const Header = () => {
       }
      if(fontsLoaded){
         return (
-            <View style={{width:'100%',height:75,backgroundColor:Colors.main,justifyContent:'space-between',flexDirection:'row',alignItems:'center',padding:20}}>
+            <View style={{width:'100%',height:80,backgroundColor:Colors.main,justifyContent:'space-between',flexDirection:'row',alignItems:'center',padding:20}}>
                 <TouchableOpacity>
                 <Avatar image={{ uri: auth.currentUser.photoURL }} />
                 </TouchableOpacity>
-                <Text style={{fontFamily:"Poppins_400Regular",fontSize:22,color:"#fff"}}>iShop</Text>
-                <TouchableOpacity onPress={()=>SignOutProfile()}>
-                <Ionicons name="log-out-outline" size={36} color="#fff"></Ionicons>
+                <Text style={{fontFamily:"Poppins_600SemiBold",fontSize:22,color:"#fff"}}>iShop</Text>
+                <View style={{flexDirection:'row'}}>
+                <TouchableOpacity style={{paddingRight:10}} onPress={()=>navigation.replace("home")}>
+                <Ionicons name="home" size={27} color="#fff"></Ionicons>
                 </TouchableOpacity>
+                <TouchableOpacity onPress={()=>SignOutProfile()}>
+                <Ionicons name="log-out-outline" size={30} color="#fff"></Ionicons>
+                </TouchableOpacity>
+                </View>
               </View>
           )
      }

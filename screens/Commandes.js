@@ -25,6 +25,7 @@ import {
     Poppins_900Black_Italic,
   } from '@expo-google-fonts/poppins';
 import ItemCard from '../components/ItemCard';
+import Header from '../screens/Header'
 import {auth,db,storage} from "../firebase"
 import {updateDoc,doc } from "firebase/firestore"; 
 import { collection, query, where, onSnapshot ,orderBy } from "firebase/firestore";
@@ -162,6 +163,7 @@ const Commandes = ({navigation}) => {
          </View>
         : 
         <ScrollView>
+          <Header />
          <View style={{justifyContent:"center",alignItems:"center",width:"100%",marginVertical:15}}>
             <Text style={{fontFamily:"Poppins_600SemiBold",fontSize:20}}>Commandes</Text> 
             {commandes.length == 0 ? <Text style={{fontFamily:"Poppins_400Regular",fontSize:14,color:Colors.main}}>Pas de commandes pour le momment</Text> : null}

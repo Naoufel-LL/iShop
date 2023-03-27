@@ -25,7 +25,7 @@ export default function Tabs() {
             } else if (route.name === 'Home') {
               iconName = focused ? 'home' : 'home';
             } else if (route.name == 'Myshop'){
-                iconName = focused ? 'shirt' : 'shirt';
+                iconName = focused ? 'grid-outline' : 'grid-outline';
               }else if (route.name == 'Commandes'){
                 iconName = focused ? 'cube' : 'cube';
               }else if (route.name == 'Shop'){
