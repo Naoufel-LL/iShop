@@ -129,9 +129,17 @@ const reports = [
            <Text style={styles.title}>{data.product_title}</Text>
             {auth.currentUser.uid != data.owner_id ? <TouchableOpacity onPress={()=>setModal(true)}>
            <Ionicons  name="alert-circle-outline" color="red" size={25} />
-            </TouchableOpacity> : <TouchableOpacity onPress={()=>handleDeleteProduct(data.document_id)}>
+            </TouchableOpacity> : 
+            <View style={{flexDirection:"row"}}>
+               <TouchableOpacity style={{paddingRight:8}} onPress={()=>navigation.navigate("UpdateProduit",{doc_id:data.document_id})}>
+             <Ionicons  name="create" color="orange" size={25} />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={()=>handleDeleteProduct(data.document_id)}>
            <Ionicons  name="trash-bin" color="red" size={25} />
-            </TouchableOpacity>}
+            </TouchableOpacity>
+            
+              </View>
+            }
            </View>
            <Modal visible={modal} transparent={true} animationType="fade">
              <KeyboardAvoidingView>

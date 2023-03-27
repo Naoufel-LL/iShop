@@ -43,7 +43,6 @@ export default function Tabs() {
       >
          <Tab.Screen name="Myshop" component={Myshop} ></Tab.Screen>
          <Tab.Screen name="Commandes" component={Commandes} ></Tab.Screen>
-         <Tab.Screen name="Shop" component={SellerProfil} ></Tab.Screen>
     </Tab.Navigator>
   )
 }

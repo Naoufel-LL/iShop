@@ -21,6 +21,7 @@ import Change_Password from './screens/Change_Password';
 import Myshop from './screens/Myshop'
 import CommanderPage from './screens/CommanderPage';
 import Commandes from './screens/Commandes';
+import UpdateProduct from './screens/UpdateProduct';
 const Stack = createNativeStackNavigator();
 
 function App() {
@@ -49,6 +50,7 @@ function App() {
             color:'#fff',
           },headerTitleAlign:'center'}}/>
     <Stack.Screen name="addProduit" component={AddProduit}  options={{headerShown:false}} />
+    <Stack.Screen name="UpdateProduit" component={UpdateProduct}  options={{headerShown:false}} />
       <Stack.Screen name="Myshop" component={Tabs2}  options={{headerShown:false}} />
       <Stack.Screen name="Change_Info" component={Change_Info}  options={{headerShown:false}} />
       <Stack.Screen name="Change_Password" component={Change_Password}  options={{headerShown:false}} />

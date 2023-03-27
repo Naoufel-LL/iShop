@@ -164,7 +164,7 @@ const Commandes = ({navigation}) => {
         <ScrollView>
          <View style={{justifyContent:"center",alignItems:"center",width:"100%",marginVertical:15}}>
             <Text style={{fontFamily:"Poppins_600SemiBold",fontSize:20}}>Commandes</Text> 
-            {commandes.length == 1 ? <Text style={{fontFamily:"Poppins_400Regular",fontSize:14,color:Colors.main}}>Pas de commandes pour le momment</Text> : null}
+            {commandes.length == 0 ? <Text style={{fontFamily:"Poppins_400Regular",fontSize:14,color:Colors.main}}>Pas de commandes pour le momment</Text> : null}
             {commandes.map((data)=>{
                 return(
                   <TouchableOpacity onPress={()=>detailOrder(data)} onLongPress={()=>handleLivredOrder(data.document_id,data.status)}>
