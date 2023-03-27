@@ -36,7 +36,7 @@ const Orders = ({navigation}) => {
 
   useLayoutEffect(()=>{
     const list = []
-    const q = query(collection(db, "commandes"),where("buyer_id", "==", auth.currentUser.uid))
+    const q = query(collection(db, "commandes"),where("buyer_id", "==", auth.currentUser.uid),orderBy("status"))
    const unsubscribe = onSnapshot(q, (querySnapshot) => {
  querySnapshot.forEach((doc) => {
   const {

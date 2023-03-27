@@ -254,6 +254,7 @@ const handleAddProduct =  () =>{
           });
           console.log("Document written with ID: ", docRef.id);
           console.log("Product Added")
+          Alert.alert("Produit a été bien Ajouté !!")
           navigation.replace("Myshop")
        }else{
            Alert.alert("Error")

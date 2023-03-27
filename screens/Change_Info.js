@@ -263,7 +263,7 @@ if(fontsLoaded){
           <TextInput
           required
            onFocus={() => setFocused2(true)}
-           onBlur={() => {setFocused2(false);validerTel(phone)}}
+           onBlur={() => {setFocused2(false);validerTel(thisUser.phone)}}
           value={thisUser.phone}
         onChangeText={(txt) => setThisUser({...thisUser, phone: txt})}
            style={[
