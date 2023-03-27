@@ -33,7 +33,26 @@ import OrderItem from '../components/OrderItem';
 const Commandes = ({navigation}) => {
   const [commandes,setCommandes]=useState([])
   const [loading,setLoading]=useState(false)
-
+  let [fontsLoaded] = useFonts({
+    Poppins_100Thin,
+    Poppins_100Thin_Italic,
+    Poppins_200ExtraLight,
+    Poppins_200ExtraLight_Italic,
+    Poppins_300Light,
+    Poppins_300Light_Italic,
+    Poppins_400Regular,
+    Poppins_400Regular_Italic,
+    Poppins_500Medium,
+    Poppins_500Medium_Italic,
+    Poppins_600SemiBold,
+    Poppins_600SemiBold_Italic,
+    Poppins_700Bold,
+    Poppins_700Bold_Italic,
+    Poppins_800ExtraBold,
+    Poppins_800ExtraBold_Italic,
+    Poppins_900Black,
+    Poppins_900Black_Italic,
+  });
   useLayoutEffect(()=>{
     const list = []
     const q = query(collection(db, "commandes"),where("seller_id", "==", auth.currentUser.uid))
@@ -115,29 +134,50 @@ const Commandes = ({navigation}) => {
      );
    }
  };
-  return (
-    <ScrollView>
-      {!loading ? 
-       <View>
-        <ActivityIndicator size={20}/>
-       </View>
-      : 
+ const detailOrder = (data) =>{
+      Alert.alert("Detail du Commande",`
+   Client : ${data.buyer_name}
+
+   Quantity: ${data.quantity}
+
+   Total : ${data.total}Dh
+
+   Adress : ${data.buyer_adress}
+
+   Code Postal : ${data.buyer_codePostal}
+  
+   Téléphone : ${data.buyer_tel}
+
+   Date du Commande : ${new Date(data.buy_time).toLocaleDateString()}
+
+
+      `)
+ }
+  if(fontsLoaded){
+    return (
       <ScrollView>
-       <View style={{justifyContent:"center",alignItems:"center",width:"100%",}}>
-          <Text>Commandes</Text> 
-          {commandes.length == 0 ? <Text>Pas de commandes pour le momment</Text> : null}
-          {commandes.map((data)=>{
-              return(
-                <TouchableOpacity onLongPress={()=>handleLivredOrder(data.document_id,data.status)}>
-                <OrderItem data={data}/>
-                </TouchableOpacity>
-              )
-          })}
-       </View>
-        </ScrollView>
-      }
-    </ScrollView>
-  )
+        {!loading ? 
+         <View>
+          <ActivityIndicator size={20}/>
+         </View>
+        : 
+        <ScrollView>
+         <View style={{justifyContent:"center",alignItems:"center",width:"100%",marginVertical:15}}>
+            <Text style={{fontFamily:"Poppins_600SemiBold",fontSize:20}}>Commandes</Text> 
+            {commandes.length == 1 ? <Text style={{fontFamily:"Poppins_400Regular",fontSize:14,color:Colors.main}}>Pas de commandes pour le momment</Text> : null}
+            {commandes.map((data)=>{
+                return(
+                  <TouchableOpacity onPress={()=>detailOrder(data)} onLongPress={()=>handleLivredOrder(data.document_id,data.status)}>
+                  <OrderItem data={data}/>
+                  </TouchableOpacity>
+                )
+            })}
+         </View>
+          </ScrollView>
+        }
+      </ScrollView>
+    )
+  }
 }
 
 export default Commandes

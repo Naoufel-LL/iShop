@@ -2,7 +2,6 @@ import { View, Text,Image} from 'react-native'
 import React from 'react'
 import Onboarding from 'react-native-onboarding-swiper';
 import Colors from "../constans/Colors"
-import { Ionicons } from "@expo/vector-icons";
 
 const Start = ({navigation}) => {
   return (

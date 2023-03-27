@@ -83,7 +83,26 @@ const Orders = ({navigation}) => {
   },[])
   console.log(orders)
   navigation.setOptions({ tabBarBadge: orders.length})
-  
+
+  const detailOrder = (data) =>{
+    Alert.alert("Detail du Commande",`
+ Vendeur : ${data.seller_name}
+
+ Quantity: ${data.quantity}
+
+ Total : ${data.total}Dh
+
+ Adress : ${data.buyer_adress}
+
+ Code Postal : ${data.buyer_codePostal}
+
+ Téléphone : ${data.buyer_tel}
+
+ Date du Commande : ${new Date(data.buy_time).toLocaleDateString()}
+
+
+    `)
+}
  
   return (
     <ScrollView>
@@ -98,7 +117,7 @@ const Orders = ({navigation}) => {
           <Text style={{marginVertical:15}}>Mes Orders</Text> 
           {orders.map((data)=>{
               return(
-                <TouchableOpacity>
+                <TouchableOpacity onPress={()=>detailOrder(data)}>
                 <OrderItem data={data}/>
                 </TouchableOpacity>
               )
