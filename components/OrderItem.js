@@ -55,7 +55,7 @@ export default function OrderItem({data}) {
             : <Text style={{fontFamily:"Poppins_400Regular",fontSize:15}}>Client  : {data.buyer_name}</Text>}
                  <Text style={{fontFamily:"Poppins_400Regular",fontSize:15}}>Quantité  : x{data.quantity}</Text>
                  <Text style={{fontFamily:"Poppins_400Regular",fontSize:15}}>Total  : {data.total}DH</Text>
-                 {data.status ? <Text style={{fontFamily:"Poppins_400Regular",fontSize:15,color:'green'}}>Statut : Livred <Ionicons name="md-checkmark" size={15} ></Ionicons></Text> : <Text style={{fontFamily:"Poppins_400Regular",fontSize:15,color:'red'}}>Statut : Non Livré <Ionicons name="alert-circle" size={15} ></Ionicons></Text>}
+                 {data.status ? <Text style={{fontFamily:"Poppins_400Regular",fontSize:15,color:'green'}}>Statut : Livré <Ionicons name="md-checkmark" size={15} ></Ionicons></Text> : <Text style={{fontFamily:"Poppins_400Regular",fontSize:15,color:'red'}}>Statut : Non Livré <Ionicons name="alert-circle" size={15} ></Ionicons></Text>}
                  </View>
              </View>
       )

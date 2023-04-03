@@ -157,13 +157,13 @@ const Commandes = ({navigation}) => {
   if(fontsLoaded){
     return (
       <ScrollView>
+            <Header />
         {!loading ? 
          <View>
           <ActivityIndicator size={20}/>
          </View>
         : 
         <ScrollView>
-          <Header />
          <View style={{justifyContent:"center",alignItems:"center",width:"100%",marginVertical:15}}>
             <Text style={{fontFamily:"Poppins_600SemiBold",fontSize:20}}>Commandes</Text> 
             {commandes.length == 0 ? <Text style={{fontFamily:"Poppins_400Regular",fontSize:14,color:Colors.main}}>Pas de commandes pour le momment</Text> : null}

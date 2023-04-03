@@ -5,6 +5,7 @@ import { Ionicons } from "@expo/vector-icons";
 import Colors from '../constans/Colors';
 import { getAuth, signOut } from "firebase/auth";
 import { useState,useEffect,useLayoutEffect} from 'react';
+
 import {
   useFonts,
   Poppins_100Thin,

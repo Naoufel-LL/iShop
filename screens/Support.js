@@ -45,7 +45,7 @@ const Support = ({navigation}) => {
           textAlign: 'center',
           fontWeight: 'bold',
           color: '#333',
-        }}>Bellati.mohamed.reda16@gmail.com</Text>
+        }}>ishop2023pfe@gmail.com</Text>
       </View>
       
       <View style={{
@@ -89,7 +89,7 @@ const Support = ({navigation}) => {
           fontSize: 18,
           textAlign: 'center',
           fontWeight: 'bold',
-          color: '#333',
+          color: '#fff',
         }}> Send Email </Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={handleCallPress} style={{
@@ -111,7 +111,7 @@ const Support = ({navigation}) => {
           fontSize: 18,
           textAlign: 'center',
           fontWeight: 'bold',
-          color: '#333',
+          color: '#fff',
         }}> Appeler </Text>
       </TouchableOpacity>
       

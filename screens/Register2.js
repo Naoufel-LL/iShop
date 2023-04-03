@@ -223,6 +223,7 @@ const handleSignUp =  () =>{
           const user = userCredentials.user;
           console.log('Logged in with:', user.email);
           const docRef = addDoc(collection(db, "users"), {
+            auth_id:user.uid,
             email: email,
             firstName:firstName,
             lastName:lastName,
