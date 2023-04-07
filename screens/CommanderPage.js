@@ -144,8 +144,11 @@ if (docSnap.exists()) {
 } else {
   console.log("No such document!");
   setDoc(doc(db, "stats",`${new Date().toLocaleDateString("es-CL")}`), {
+    date:`${new Date().toLocaleDateString("es-CL")}`,
     total:totalPrice,
-    nbrCommande:1
+    nbrCommande:1,
+    newusers:0,
+    newproduct:0,
   });
 }
 
