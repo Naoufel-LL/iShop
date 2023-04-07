@@ -27,7 +27,7 @@ import {
   Poppins_900Black_Italic,
 } from '@expo-google-fonts/poppins';
 import {auth,db,storage} from "../firebase"
-import { collection, addDoc } from "firebase/firestore"; 
+import { collection, addDoc,doc,getDoc,updateDoc,setDoc } from "firebase/firestore"; 
 const CommanderPage = ({route,navigation}) => {
   let [fontsLoaded] = useFonts({
     Poppins_100Thin,
@@ -121,13 +121,34 @@ const Commander = () =>{
          total:totalPrice,
          status:false,
     });
+
     console.log("Document written with ID: ", docRef.id);
     console.log("Commande Added")
     Alert.alert("Commande Bien Ajouté !")
+    TriggerStats();
     navigation.replace("home")
      }else{
         Alert.alert("Erreur ! Veillez bien remplir le formulaire")
      }
+}
+const TriggerStats = async () =>{
+  const docRef = doc(db, "stats",`${new Date().toLocaleDateString("es-CL")}`);
+const docSnap = await getDoc(docRef);
+
+if (docSnap.exists()) {
+  console.log("Document data:", docSnap.data().total);
+  updateDoc(docRef, {
+    total: docSnap.data().total + totalPrice ,
+    nbrCommande : docSnap.data().nbrCommande + 1
+});
+} else {
+  console.log("No such document!");
+  setDoc(doc(db, "stats",`${new Date().toLocaleDateString("es-CL")}`), {
+    total:totalPrice,
+    nbrCommande:1
+  });
+}
+
 }
   if(fontsLoaded){
     return (
@@ -251,7 +272,7 @@ const Commander = () =>{
             <Text></Text>
             <Text style={{fontFamily:"Poppins_700Bold"}}>Total à Payer : {totalPrice} DH</Text>
              <TouchableOpacity
-          onPress={()=>{handleCommander()}}
+           onPress={()=>{handleCommander()}}
           style={{
             width:'70%',
             padding: 10 * 2,
