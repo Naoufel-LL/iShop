@@ -30,7 +30,7 @@ import { Ionicons } from "@expo/vector-icons";
 import * as ImagePicker from 'expo-image-picker';
 
 import {auth,db,storage} from "../firebase"
-import { collection, addDoc } from "firebase/firestore"; 
+import { collection, addDoc,setDoc,doc,getDoc,updateDoc } from "firebase/firestore"; 
 import { Alert } from 'react-native';
 const AddProduit = ({navigation,route}) =>{
     let [fontsLoaded] = useFonts({
@@ -254,6 +254,7 @@ const handleAddProduct =  () =>{
           });
           console.log("Document written with ID: ", docRef.id);
           console.log("Product Added")
+          TriggerStats();
           Alert.alert("Produit a été bien Ajouté !!")
           navigation.replace("Myshop")
        }else{
@@ -276,6 +277,25 @@ const pickImage = async () => {
     uploadImage(result.assets[0].uri)
   }
 };
+const TriggerStats = async () =>{
+  const docRef = doc(db, "stats",`${new Date().toLocaleDateString("es-CL")}`);
+const docSnap = await getDoc(docRef);
+
+if (docSnap.exists()) {
+  updateDoc(docRef, {
+    newproduct: docSnap.data().newproduct + 1 ,
+});
+} else {
+  console.log("No such document!");
+  setDoc(doc(db, "stats",`${new Date().toLocaleDateString("es-CL")}`), {
+    date:`${new Date().toLocaleDateString("es-CL")}`,
+    total:0,
+    nbrCommande:0,
+    newusers:0,
+    newproduct:1,
+  });
+}
+}
 if(fontsLoaded){
  return(
     <SafeAreaView style={{paddingTop:'10%',justifyContent:'center',alignContent:'center',width:"100%",alignItems:"center"}}>
@@ -451,7 +471,7 @@ if(fontsLoaded){
             
           </View>
       <TouchableOpacity
-          onPress={()=>handleAddProduct()}
+         onPress={()=>handleAddProduct()}
           style={{
             width:'70%',
             padding: 10 * 2,

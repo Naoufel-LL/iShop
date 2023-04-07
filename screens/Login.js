@@ -24,8 +24,10 @@ import {
 } from '@expo-google-fonts/poppins';
 import Colors from '../constans/Colors';
 import { Ionicons } from "@expo/vector-icons";
-import {signInWithEmailAndPassword, sendPasswordResetEmail } from "firebase/auth";
+import {signInWithEmailAndPassword, sendPasswordResetEmail,signOut } from "firebase/auth";
+import { collection, query, where, onSnapshot ,orderBy } from "firebase/firestore";
 import {auth,db} from "../firebase"
+import { Alert } from 'react-native';
 const Login = ({navigation}) => {
   let [fontsLoaded] = useFonts({
     Poppins_100Thin,
@@ -65,12 +67,30 @@ const Login = ({navigation}) => {
   }
 
   const handleLogin = () => {
+
+
     signInWithEmailAndPassword(auth,email, password)
       .then(userCredentials => {
         const user = userCredentials.user;
         console.log('Logged in with:', user.email);
-        Keyboard.dismiss()
+        const q = query(collection(db, "users"),where("email", "==", email))
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+       const {
+        banned
+       } = doc.data();
+       console.log(banned)
+       if(banned){
+        Alert.alert("Votre compte est suspendu ! Veillez contacter le support")
+        signOut(auth).then(() => {
+        }).catch((error) => {
+        });
+      }else{
         navigation.replace("home")
+      }
+      });
+     });
+        Keyboard.dismiss()
       })
       .catch(error => alert(error.message))
   }

@@ -28,12 +28,11 @@ import {
 
 import { useState } from 'react';
 import Colors from '../constans/Colors';
-import { Ionicons } from "@expo/vector-icons";
 import {signInWithEmailAndPassword} from "firebase/auth"
 import * as ImagePicker from 'expo-image-picker';
 
 import {auth,db,storage} from "../firebase"
-import { collection, addDoc } from "firebase/firestore"; 
+import { collection, addDoc,setDoc,getDoc,doc,updateDoc } from "firebase/firestore"; 
 import { Alert } from 'react-native';
 const Register2 = ({navigation,route}) =>{
     let [fontsLoaded] = useFonts({
@@ -245,6 +244,7 @@ const handleSignUp =  () =>{
             // An error occurred
             // ...
           });
+           TriggerStats();
           setTimeout(function () {
                navigation.replace("home")
             }, 5000);         
@@ -272,6 +272,25 @@ const pickImage = async () => {
     uploadImage(result.assets[0].uri)
   }
 };
+const TriggerStats = async () =>{
+  const docRef = doc(db, "stats",`${new Date().toLocaleDateString("es-CL")}`);
+const docSnap = await getDoc(docRef);
+
+if (docSnap.exists()) {
+  updateDoc(docRef, {
+    newusers: docSnap.data().newusers + 1 ,
+});
+} else {
+  console.log("No such document!");
+  setDoc(doc(db, "stats",`${new Date().toLocaleDateString("es-CL")}`), {
+    date:`${new Date().toLocaleDateString("es-CL")}`,
+    total:0,
+    nbrCommande:0,
+    newusers:1,
+    newproduct:0,
+  });
+}
+}
 if(fontsLoaded){
  return(
     <SafeAreaView style={{paddingTop:'10%',justifyContent:'center',alignContent:'center',width:"100%",alignItems:"center"}}>
