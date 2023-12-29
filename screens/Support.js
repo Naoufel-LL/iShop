@@ -6,7 +6,7 @@ import Colors from '../constans/Colors';
 
 const Support = ({navigation}) => {
   const handleEmailPress = () => {
-    Linking.openURL(`mailto:${'ishop2023pfe@gmail.com'}`);
+    Linking.openURL(`mailto:${'ishop2023@gmail.com'}`);
   };
   const handleCallPress = () => {
     Linking.openURL(`tel:${'0612451770'}`);
